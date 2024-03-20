@@ -1,0 +1,5 @@
+﻿
+
+1- Ef core, sqlserver ve tools paketleri yükledik
+2- IdentityDbContext için Identity.efcore paketini yüklüyoruz
+3- appuser ve approle sınıflarını oluşturuyoruz
