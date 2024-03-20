@@ -14,13 +14,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 });
 
 //Identity için aþaðýdaki þekilde tanýmlamalarýmýzý yaptýk
-builder.Services.AddIdentity<AppUser,AppRole>().AddEntityFrameworkStores<AppDbContext>(); 
-
-
-
-
-
-
+builder.Services.AddIdentity<AppUser,AppRole>().AddEntityFrameworkStores<AppDbContext>();
 
 
 
