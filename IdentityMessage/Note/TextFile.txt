@@ -1,5 +1,19 @@
 ﻿
 
 1- Ef core, sqlserver ve tools paketleri yükledik
-2- IdentityDbContext için Identity.efcore paketini yüklüyoruz
-3- appuser ve approle sınıflarını oluşturuyoruz
+2- IdentityDbContext için Identity.efcore paketini yükledik
+3- appuser ve approle sınıflarını Identityuser ve ıdentityrole inherit ederek oluşturduk
+4- sqlserver object explorer tarafından server bağladık ve connectionstring aldık 
+5- appsettings e connctionstring tanımladık
+6- program.cs tarafında aşağıdaki şekilde tanımladık.
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("SqlCon")); 
+});
+
+
+builder.Services.AddIdentity<AppUser,AppRole>().AddEntityFrameworkStores<AppDbContext>();
+
+7-
+
