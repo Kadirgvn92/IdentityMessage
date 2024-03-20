@@ -15,5 +15,5 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddIdentity<AppUser,AppRole>().AddEntityFrameworkStores<AppDbContext>();
 
-7-
+7-Login controller oluştruduk ve SignUp methodunu oluşturduk ve view tarafını dizayn ettik
 
