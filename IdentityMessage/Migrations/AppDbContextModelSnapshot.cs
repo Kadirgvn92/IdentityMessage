@@ -75,7 +75,6 @@ namespace IdentityMessage.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NormalizedEmail")
@@ -99,7 +98,6 @@ namespace IdentityMessage.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Surname")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("TwoFactorEnabled")
@@ -120,6 +118,91 @@ namespace IdentityMessage.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "6fdad58d-466f-4c8c-a4b5-755fe3d63912",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "112bbb14-1db8-4e89-919f-63860e526952",
+                            Email = "kadirgvn92@gmail.com",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            Name = "Kadir",
+                            NormalizedEmail = "KADIRGVN92@GMAIL.COM",
+                            NormalizedUserName = "KADIRGVN92",
+                            PasswordHash = "AQAAAAEAACcQAAAAEF+HmcWldkwO6zfQxM+UpKq9KD2g/Sw5Gu+xjVMZ79nppZxmEDRISs4SeLiLo2Br3Q==",
+                            PhoneNumber = "5382725403",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "f12bf291-d3f2-4df7-b914-39b97b412f78",
+                            Surname = "Güven",
+                            TwoFactorEnabled = false,
+                            UserName = "KadirGvn92"
+                        },
+                        new
+                        {
+                            Id = "ff56b09f-e242-4909-8ce0-47c6810c2e3a",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "1078f4bd-20c4-45f1-8fe4-f76530e3cc8e",
+                            Email = "brc_kdr@gmail.com",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            Name = "Burcu",
+                            NormalizedEmail = "BRC_KDR@GMAIL.COM",
+                            NormalizedUserName = "BURCUGVN92",
+                            PasswordHash = "AQAAAAEAACcQAAAAEMNEH/UsIQDcVOlJNgVWikjvQYqqinDEzB3DrefhMX5+6Rc8zkb6+55Ng680gSxRFg==",
+                            PhoneNumber = "5382725403",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "dcf96ba6-fa90-4f51-86ca-1e13b62be023",
+                            Surname = "Güven",
+                            TwoFactorEnabled = false,
+                            UserName = "BurcuGvn92"
+                        });
+                });
+
+            modelBuilder.Entity("IdentityMessage.Models.Mail", b =>
+                {
+                    b.Property<int>("MailId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MailId"), 1L, 1);
+
+                    b.Property<string>("AppUserID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsDraft")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsImportant")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsJunk")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsTrash")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("MailContent")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("MailDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("MailSubject")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ToUserEmail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("MailId");
+
+                    b.HasIndex("AppUserID");
+
+                    b.ToTable("Mails", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -228,6 +311,15 @@ namespace IdentityMessage.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("IdentityMessage.Models.Mail", b =>
+                {
+                    b.HasOne("IdentityMessage.Models.AppUser", "AppUser")
+                        .WithMany("Mail")
+                        .HasForeignKey("AppUserID");
+
+                    b.Navigation("AppUser");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("IdentityMessage.Models.AppRole", null)
@@ -277,6 +369,11 @@ namespace IdentityMessage.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("IdentityMessage.Models.AppUser", b =>
+                {
+                    b.Navigation("Mail");
                 });
 #pragma warning restore 612, 618
         }

@@ -2,6 +2,7 @@
 using IdentityMessage.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Principal;
 
 namespace IdentityMessage.Controllers;
 public class LoginController : Controller
@@ -19,7 +20,7 @@ public class LoginController : Controller
     {
         return View();
     }
-
+    [HttpGet]
     public IActionResult SignUp()
     {
         return View();
@@ -27,27 +28,63 @@ public class LoginController : Controller
     [HttpPost]
     public async Task<IActionResult> SignUp(SignUpViewModel model)
     {
-
-        var identity = await _userManager.CreateAsync(new AppUser
+        if (ModelState.IsValid)
         {
-            Name = model.Name,
-            Surname = model.Surname,
-            Email = model.Email,
-            PhoneNumber = model.Phone,
-            UserName = model.UserName,
+            var identity = await _userManager.CreateAsync(new AppUser
+            {
+                Name = model.Name,
+                Surname = model.Surname,
+                Email = model.Email,
+                UserName = model.UserName,
 
-        }, model.Password);
+            }, model.ConfirmPassword);
 
-        if(identity.Succeeded)
-        {
-            TempData["MessageSuccess"] = "Üyelik kayıt işlemi gerçekleştirilmiştir";
-            return RedirectToAction("SignUp");
-        }
+            if (identity.Succeeded)
+            {
+                TempData["MessageSuccess"] = "Üyelik kayıt işlemi gerçekleştirilmiştir";
+                return RedirectToAction("SignUp");
+            }
+            foreach (IdentityError item in identity.Errors)
+            {
+                ModelState.AddModelError(string.Empty, item.Description);
+            }
+            return View();
 
-        foreach(IdentityError item in identity.Errors)
-        {
-            ModelState.AddModelError(string.Empty,item.Description);
         }
         return View();
+      
+    }
+    [HttpGet]
+    public IActionResult SignIn()
+    {
+        return View();
+    }
+    [HttpPost]
+    public async Task<IActionResult> SignIn(SignInViewModel p)
+    {
+        if (ModelState.IsValid)
+        {
+            var result = await _signInManager.PasswordSignInAsync(p.Username, p.Password, false, true);
+            if (result.Succeeded)
+            {
+                return RedirectToAction("Index", "Mail");
+            }
+            else
+            {
+                ViewBag.ErrorMessage = "Geçersiz Kullanıcı adı veya Şifre. Lütfen tekrar deneyiniz.";
+                return View();
+            }
+        }
+        else
+        {
+            ViewBag.ErrorMessage = "Lütfen giriş bilgilerinizi doğru şekilde doldurunuz.";
+            return View();
+        }
+    }
+    [HttpGet]
+    public async Task<IActionResult> LogOut()
+    {
+        await _signInManager.SignOutAsync();
+        return RedirectToAction("Index", "Default");
     }
 }
