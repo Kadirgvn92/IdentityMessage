@@ -2,7 +2,7 @@
 
 public class Mail 
 {
-    public string MailId { get; set; }
+    public int MailId { get; set; }
     public string AppUserID { get; set; }
     public string ToUserEmail { get; set; }
     public string MailSubject { get; set; }

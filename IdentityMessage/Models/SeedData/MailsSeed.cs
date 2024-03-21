@@ -10,7 +10,7 @@ public class MailsSeed : IEntityTypeConfiguration<Mail>
     {
         builder.HasData(new Mail
         {
-            MailId = Guid.NewGuid().ToString(),
+            MailId = 1,
             AppUserID = "6fdad58d-466f-4c8c-a4b5-755fe3d63912",
             ToUserEmail = "brc_kdr@gmail.com",
             MailSubject = "Stajyer başvurusu Hk.",
@@ -24,7 +24,7 @@ public class MailsSeed : IEntityTypeConfiguration<Mail>
         },
         new Mail
         {
-            MailId = Guid.NewGuid().ToString(),
+            MailId = 2,
             AppUserID = "ff56b09f-e242-4909-8ce0-47c6810c2e3a",
             ToUserEmail = "kadirgvn92@gmail.com",
             MailSubject = "Stajyer başvurusu Hk.",

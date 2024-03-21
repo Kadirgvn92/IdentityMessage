@@ -16,6 +16,5 @@ public class AppDbContext : IdentityDbContext<AppUser, AppRole, string>
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.ApplyConfiguration(new MailSeed());
-        modelBuilder.ApplyConfiguration(new MailsSeed());
     }
 }

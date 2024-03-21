@@ -1,10 +1,12 @@
 ﻿using IdentityMessage.Models;
 using IdentityMessage.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Principal;
 
 namespace IdentityMessage.Controllers;
+[AllowAnonymous]
 public class LoginController : Controller
 {
     private readonly UserManager<AppUser> _userManager;
@@ -67,7 +69,7 @@ public class LoginController : Controller
             var result = await _signInManager.PasswordSignInAsync(p.Username, p.Password, false, true);
             if (result.Succeeded)
             {
-                return RedirectToAction("Index", "Mail");
+                return RedirectToAction("Index", "Home");
             }
             else
             {
