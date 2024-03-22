@@ -20,4 +20,5 @@ public class MailViewModel
     public PageInfoModel PageInfo { get; set; }
     public List<Mail> Mails { get; set; }
     public Mail Mail { get; set; }
+    public AppUser AppUser { get; set; }
 }

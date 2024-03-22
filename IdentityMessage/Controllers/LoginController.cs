@@ -87,6 +87,6 @@ public class LoginController : Controller
     public async Task<IActionResult> LogOut()
     {
         await _signInManager.SignOutAsync();
-        return RedirectToAction("Index", "Default");
+        return RedirectToAction("SignIn", "Login");
     }
 }

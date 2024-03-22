@@ -1,7 +1,10 @@
+using FluentValidation.AspNetCore;
+using FluentValidation;
 using IdentityMessage.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
+using IdentityMessage.Validations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +21,12 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 //Identity için aþaðýdaki þekilde tanýmlamalarýmýzý yaptýk
 builder.Services.AddIdentity<AppUser,AppRole>().AddEntityFrameworkStores<AppDbContext>();
 
+builder.Services.AddFluentValidationAutoValidation(config =>
+{
+    config.DisableDataAnnotationsValidation = true;
+});
+
+builder.Services.AddValidatorsFromAssemblyContaining<LoginValidator>();
 
 builder.Services.AddMvc(config =>
 {

@@ -1,11 +1,11 @@
 ﻿@using System.Text.RegularExpressions
+
 @model MailViewModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Send";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
-
 
 <div class="content-wrapper ">
 
@@ -16,7 +16,7 @@
             <div class="col-md-12">
                 <div class="card card-primary card-outline">
                     <div class="card-header">
-                        <h3 class="card-title">Gelen Kutusu</h3>
+                        <h3 class="card-title">Giden Kutusu</h3>
 
                         <div class="card-tools">
                             <div class="input-group input-group-sm">
@@ -46,11 +46,11 @@
                                     <div class="btn-group">
                                         @if (Model.PageInfo.CurrentPage > 1)
                                         {
-                                            <a href="/Mail/Index/?page=@(Model.PageInfo.CurrentPage-1)" class="btn btn-default btn-sm"><i class="fas fa-chevron-left"></i> </a>
+                                            <a href="/Mail/Send/?page=@(Model.PageInfo.CurrentPage-1)" class="btn btn-default btn-sm"><i class="fas fa-chevron-left"></i> </a>
                                         }
                                         @if (Model.PageInfo.CurrentPage < Model.PageInfo.TotalPages())
                                         {
-                                            <a href="/Mail/Index/?page=@(Model.PageInfo.CurrentPage+1)" class="btn btn-default btn-sm">><i class="fa fa-chevron-right"></i></a>
+                                            <a href="/Mail/Send/?page=@(Model.PageInfo.CurrentPage+1)" class="btn btn-default btn-sm">><i class="fa fa-chevron-right"></i></a>
                                         }
                                     </div>
                                     <!-- /.btn-group -->
@@ -68,10 +68,8 @@
                                                 <label for="checkall"></label>
                                             </div>
                                         </th>
-                                        <th class="text-center">
-                                            Önemli
-                                        </th>
-                                        <th>Gönderen</th>
+                                        <th>Önemli</th>
+                                        <th>Alıcı</th>
                                         <th>Konu</th>
                                         <th>Mail İçerik</th>
                                         <th>Mail Tarihi</th>
@@ -80,7 +78,7 @@
                                 <tbody>
                                     @foreach (var item in Model.Mails)
                                     {
-                                        <tr class="@(item.IsRead == false ? "font-weight-bold" : "")" style="@(item.IsRead == false ? "background-color:darkgray" : "")">
+                                        <tr >
                                             <td width="50px">
                                                 <div class="icheck-primary">
                                                     <input type="checkbox" value="" id="@item.MailId">
@@ -91,9 +89,9 @@
                                             @if (item.IsImportant)
                                             {
                                                 <td class="mailbox-star align-middle text-center" width="100px">
-                                                    <a href="/Mail/Important/@item.MailId" ><i class="fas fa-star text-warning"></i></a>
+                                                    <a href="/Mail/Important/@item.MailId"><i class="fas fa-star text-warning"></i></a>
                                                 </td>
-                                                
+
                                             }
                                             else
                                             {
@@ -101,14 +99,15 @@
                                                     <a href="/Mail/Important/@item.MailId"><i class="fa fa-star text-secondary "></i></a>
                                                 </td>
                                             }
-                                            
-                                            <td class="mailbox-name align-middle" width="300px"><a href="read-mail.html" style="color: inherit;">@item.AppUser.Email</a></td>
+                                            <td class="mailbox-subject align-middle">
+                                                <a href="/Mail/MailDetail/@item.MailId" style="color: inherit;"> @item.ToUserEmail </a>
+                                            </td>
                                             <td class="mailbox-subject align-middle" width="300px">
                                                 <a href="/Mail/MailDetail/@item.MailId" style="color: inherit;"> @item.MailSubject </a>
                                             </td>
                                             <td class="mailbox-subject align-middle">
                                                 @{
-                                                    var des = item.MailContent.Substring(0, 50).LastIndexOf(" ");
+                                                    var des = item.MailContent.Substring(0, 30).LastIndexOf(" ");
                                                     Func<string, string> RemoveHtmlTags = (input) =>
                                                     {
                                                         if (string.IsNullOrEmpty(input))
@@ -134,4 +133,3 @@
         </div>
     </section>
 </div>
-

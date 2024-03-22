@@ -22,19 +22,22 @@
                             <div class="card-body">
                                 <div class="form-group">
                                     <input class="form-control" placeholder="Kime :" asp-for="ToUserEmail">
-                                    <span asp-validation-for="ToUserEmail"></span>
                                 </div>
                                 <div class="form-group">
                                     <input class="form-control" placeholder="Konu : " asp-for="MailSubject">
-                                    <span asp-validation-for="MailSubject"></span>
                                 </div>
                                 <div class="form-group">
                                     <label for="Body">Mesajınız</label>
                                     <div id="editor" style="height: 300px;"></div>
                                     <input type="hidden" id="Body" asp-for="MailContent">
-                                    <span asp-validation-for="MailContent"></span>
                                 </div>
                             </div>
+                            @if (ViewBag.EmailError != null)
+                            {
+                                <div class="alert alert-danger">
+                                    <p>@ViewBag.EmailError</p>
+                                </div>
+                            }
                             @if (ViewBag.ErrorMessages != null)
                             {
                                 <div class="alert alert-danger">
