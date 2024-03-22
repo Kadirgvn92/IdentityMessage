@@ -14,7 +14,7 @@ public class InboxMailViewModel
     public bool IsDraft { get; set; }
     public bool IsJunk { get; set; }
     public bool IsTrash { get; set; }
-    public int ToplamAdet { get; set; }
+    public int TotalMails { get; set; }
     public PageInfoModel PageInfo { get; set; }
     public List<Mail> Mails { get; set; }
     public Mail Mail { get; set; }

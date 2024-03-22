@@ -22,9 +22,19 @@ public class MailController : Controller
     {
         const int pageSize = 10;
         var user = await _userManager.FindByNameAsync(User.Identity.Name);
+        var model = new InboxMailViewModel
+        {
+            PageInfo = new PageInfoModel()
+            {
+                TotalItems = _context.Mails.Where(x => x.ToUserEmail == user.Email && !x.IsTrash).Count(),
+                CurrentPage = page,
+                ItemsPerPage = pageSize,
+            },
+            Mails = _context.Mails.Where(x => x.ToUserEmail == user.Email && !x.IsTrash).ToList(),
+            TotalMails = _context.Mails.Where(x => x.ToUserEmail == user.Email && !x.IsTrash).Count(),
 
-        var values = _context.Mails.Where(x => x.ToUserEmail == user.Email && !x.IsTrash).ToList();
-        return View(values);
+        };
+        return View(model);
     }
     [HttpGet]
     public async Task<IActionResult> MailDetail(int id)
