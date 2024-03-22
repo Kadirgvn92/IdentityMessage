@@ -1,4 +1,4 @@
-﻿@model InboxMailViewModel
+﻿@model MailViewModel
 
 @{
     ViewData["Title"] = "Index";
@@ -9,9 +9,9 @@
 <div class="content-wrapper ">
 
     <!-- Main content -->
-    <section class="content">
+    <section class="content mt-4 m-2">
         <div class="row">
-         
+
             <div class="col-md-12">
                 <div class="card card-primary card-outline">
                     <div class="card-header">
@@ -63,27 +63,54 @@
                         }
                         <div class="table-responsive mailbox-messages">
                             <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <div class="icheck-primary">
+                                                <input type="checkbox" value="" id="check1">
+                                                <label for="check1"></label>
+                                            </div>
+                                        </th>
+                                        <th>
+                                            Önemli
+                                        </th>
+                                        <th>Gönderen</th>
+                                        <th>Konu</th>
+                                        <th>Mail İçerik</th>
+                                        <th>Mail Tarihi</th>
+                                    </tr>
+                                </thead>
                                 <tbody>
                                     @foreach (var item in Model.Mails)
                                     {
-                                        <tr class="font-weight-bold">
+                                        <tr class="@(item.IsRead == false ? "font-weight-bold" : "")" style="@(item.IsRead == false ? "background-color:darkgray" : "")">
                                             <td>
                                                 <div class="icheck-primary">
                                                     <input type="checkbox" value="" id="check1">
                                                     <label for="check1"></label>
                                                 </div>
                                             </td>
-                                            <td class="mailbox-star"><a href="#"><i class="fas fa-star text-warning"></i></a></td>
-                                            <td class="mailbox-name"><a href="read-mail.html" style="color: inherit;">@item.ToUserEmail</a></td>
-                                            <td class="mailbox-subject">
+                                            <td class="mailbox-star align-middle" width="100px">
+                                                @if (item.IsImportant)
+                                                {
+                                                    <a href="#" class="btn" style="color: inherit;"><i class="fas fa-star text-warning"></i></a>
+                                                }
+                                                else
+                                                {
+                                                    <a href="#" class="btn" style="color: inherit;"><i class="fas fa-star"></i></a>
+                                                }
+                                            </td>
+                                            <td class="mailbox-name align-middle"><a href="read-mail.html" style="color: inherit;">@item.AppUser.Email</a></td>
+                                            <td class="mailbox-subject align-middle" width="400px">
+                                                <a href="/Mail/MailDetail/@item.MailId" style="color: inherit;"> @item.MailSubject </a>
+                                            </td>
+                                            <td class="mailbox-subject align-middle">
                                                 @{
                                                     var des = item.MailContent.Substring(0, 20).LastIndexOf(" ");
                                                 }
-
-                                                <a href="/Mail/MailDetail/@item.MailId" style="color: inherit;"> <b>@item.MailSubject</b> - @item.MailContent.Substring(0, des)...</a>
+                                                <a href="/Mail/MailDetail/@item.MailId" style="color: inherit;">  @Html.Raw(item.MailContent.Substring(0, des))... </a>
                                             </td>
-                                            <td class="mailbox-attachment"></td>
-                                            <td class="mailbox-date">@item.MailDate.ToShortDateString()</td>
+                                            <td class="mailbox-date align-middle" width="300px">@Model.MailDate.ToString("dddd, dd MMMM yy") -  @Model.MailTime.ToString("hh\\:mm")</td>
                                         </tr>
                                     }
 

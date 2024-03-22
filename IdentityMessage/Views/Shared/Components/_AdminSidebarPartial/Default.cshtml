@@ -1,4 +1,5 @@
-﻿﻿
+﻿
+@model AppUser  ﻿
 
 <aside class="main-sidebar sidebar-light-primary elevation-4">
   
@@ -11,7 +12,7 @@
                 <img src="~/AdminLTE-3.2.0/dist/img/AdminLTELogo.png" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
-                <a href="/Admin/Dashboard/Index" class="d-block">Admin</a>
+                <a href="/Admin/Dashboard/Index" class="d-block">@Model.Email</a>
             </div>
         </div>
 

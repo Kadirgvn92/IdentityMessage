@@ -69,7 +69,7 @@ public class LoginController : Controller
             var result = await _signInManager.PasswordSignInAsync(p.Username, p.Password, false, true);
             if (result.Succeeded)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Mail");
             }
             else
             {

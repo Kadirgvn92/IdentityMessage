@@ -1,6 +1,8 @@
-﻿namespace IdentityMessage.Models;
+﻿using IdentityMessage.Models;
 
-public class InboxMailViewModel
+namespace IdentityMessage.ViewModels;
+
+public class MailViewModel
 {
     public int MailId { get; set; }
     public string AppUserID { get; set; }

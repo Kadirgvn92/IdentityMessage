@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 
 namespace IdentityMessage.Controllers;
 [Authorize]
@@ -22,7 +24,7 @@ public class MailController : Controller
     {
         const int pageSize = 10;
         var user = await _userManager.FindByNameAsync(User.Identity.Name);
-        var model = new InboxMailViewModel
+        var model =  new MailViewModel
         {
             PageInfo = new PageInfoModel()
             {
@@ -30,7 +32,7 @@ public class MailController : Controller
                 CurrentPage = page,
                 ItemsPerPage = pageSize,
             },
-            Mails = _context.Mails.Where(x => x.ToUserEmail == user.Email && !x.IsTrash).Skip((page - 1) * pageSize).Take(pageSize).ToList(),
+            Mails = _context.Mails.Include(x => x.AppUser).Where(x => x.ToUserEmail == user.Email && !x.IsTrash).Skip((page - 1) * pageSize).Take(pageSize).ToList(),
             TotalMails = _context.Mails.Where(x => x.ToUserEmail == user.Email && !x.IsTrash).Count(),
 
         };
@@ -41,6 +43,8 @@ public class MailController : Controller
     {
         var user = await _userManager.FindByNameAsync(User.Identity.Name);
         var values = _context.Mails.Where(x => x.MailId == id).FirstOrDefault();
+        values.IsRead = true;
+        _context.SaveChanges();
         MailDetailViewModel model = new MailDetailViewModel()
         {
             AppUserID = values.AppUserID,
@@ -58,6 +62,65 @@ public class MailController : Controller
             AppUser = user
             
         };
+
+        TempData["MailDetail"] = "bg-light";
+
         return View(model);
+    }
+    [HttpGet]
+    public async Task<IActionResult> CreateMail(int? id)
+    {
+        var user = await _userManager.FindByNameAsync(User.Identity.Name);
+        var draft = _context.Mails.FirstOrDefault(x => x.MailId == id);
+        if(draft != null)
+        {
+            var draftMail = new MailViewModel()
+            {
+               MailId = draft.MailId,
+               MailContent = draft.MailContent,
+               MailSubject = draft.MailSubject, 
+               ToUserEmail = draft.ToUserEmail,
+            };
+            return View(draftMail);
+        }
+        return View();
+    }
+    [HttpPost]
+    public async Task<IActionResult> CreateMail(MailViewModel model)
+    {
+        var user = await _userManager.FindByNameAsync(User.Identity.Name);
+        if(ModelState.IsValid)
+        {
+            Mail newMail = new Mail()
+            {
+                AppUserID = user.Id,
+                ToUserEmail = model.ToUserEmail,
+                MailSubject = model.MailSubject,
+                MailContent = model.MailContent,
+                MailDate = DateTime.Now,
+                MailTime = DateTime.Now.TimeOfDay,
+                IsDraft = false,
+                IsImportant = false,
+                IsJunk = false,
+                IsRead = false,
+                IsTrash = false,
+            };
+            _context.Mails.Add(newMail);
+            _context.SaveChanges();
+
+            var deleteDraft = _context.Mails.FirstOrDefault(x => x.MailId == model.MailId);
+            if (deleteDraft != null)
+            {
+                _context.Mails.Remove(deleteDraft);
+                _context.SaveChanges();
+            }
+            return RedirectToAction("Send", "Mail");
+        }else
+        {
+            ViewBag.ErrorMessages = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+
+            return View(model);
+        }
+
     }
 }
