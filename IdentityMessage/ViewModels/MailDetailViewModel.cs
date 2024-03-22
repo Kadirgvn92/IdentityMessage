@@ -16,4 +16,5 @@ public class MailDetailViewModel
     public bool IsDraft { get; set; }
     public bool IsJunk { get; set; }
     public bool IsTrash { get; set; }
+    public AppUser AppUser { get; set; }
 }

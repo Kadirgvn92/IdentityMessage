@@ -16,17 +16,15 @@
         @await Component.InvokeAsync("_AdminSidebarPartial")
 
 
-        <div class="main-panel">
+        <div class="main-panel ">
 
             @RenderBody()
 
-            @await Component.InvokeAsync("_AdminFooterPartial")
-
         </div>
+       
     </div>
-   
-    
-    
+
+    @await Component.InvokeAsync("_AdminFooterPartial")
 
     @await Component.InvokeAsync("_AdminScriptPartial")
 

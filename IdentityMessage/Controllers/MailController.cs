@@ -30,7 +30,7 @@ public class MailController : Controller
                 CurrentPage = page,
                 ItemsPerPage = pageSize,
             },
-            Mails = _context.Mails.Where(x => x.ToUserEmail == user.Email && !x.IsTrash).ToList(),
+            Mails = _context.Mails.Where(x => x.ToUserEmail == user.Email && !x.IsTrash).Skip((page - 1) * pageSize).Take(pageSize).ToList(),
             TotalMails = _context.Mails.Where(x => x.ToUserEmail == user.Email && !x.IsTrash).Count(),
 
         };
@@ -54,7 +54,9 @@ public class MailController : Controller
             MailDate = values.MailDate,
             MailId = values.MailId,
             MailSubject = values.MailSubject,
-            MailTime = values.MailTime
+            MailTime = values.MailTime,
+            AppUser = user
+            
         };
         return View(model);
     }
