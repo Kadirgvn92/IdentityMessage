@@ -167,6 +167,7 @@ namespace IdentityMessage.Migrations
                     MailSubject = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     MailContent = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     MailDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    MailTime = table.Column<TimeSpan>(type: "time", nullable: false),
                     IsRead = table.Column<bool>(type: "bit", nullable: false),
                     IsImportant = table.Column<bool>(type: "bit", nullable: false),
                     IsDraft = table.Column<bool>(type: "bit", nullable: false),
@@ -182,16 +183,6 @@ namespace IdentityMessage.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                 });
-
-            migrationBuilder.InsertData(
-                table: "AspNetUsers",
-                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "Surname", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "6fdad58d-466f-4c8c-a4b5-755fe3d63912", 0, "112bbb14-1db8-4e89-919f-63860e526952", "kadirgvn92@gmail.com", false, false, null, "Kadir", "KADIRGVN92@GMAIL.COM", "KADIRGVN92", "AQAAAAEAACcQAAAAEF+HmcWldkwO6zfQxM+UpKq9KD2g/Sw5Gu+xjVMZ79nppZxmEDRISs4SeLiLo2Br3Q==", "5382725403", false, "f12bf291-d3f2-4df7-b914-39b97b412f78", "Güven", false, "KadirGvn92" });
-
-            migrationBuilder.InsertData(
-                table: "AspNetUsers",
-                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "Surname", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "ff56b09f-e242-4909-8ce0-47c6810c2e3a", 0, "1078f4bd-20c4-45f1-8fe4-f76530e3cc8e", "brc_kdr@gmail.com", false, false, null, "Burcu", "BRC_KDR@GMAIL.COM", "BURCUGVN92", "AQAAAAEAACcQAAAAEMNEH/UsIQDcVOlJNgVWikjvQYqqinDEzB3DrefhMX5+6Rc8zkb6+55Ng680gSxRFg==", "5382725403", false, "dcf96ba6-fa90-4f51-86ca-1e13b62be023", "Güven", false, "BurcuGvn92" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

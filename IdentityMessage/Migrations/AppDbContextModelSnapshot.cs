@@ -118,46 +118,6 @@ namespace IdentityMessage.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "0cd749ea-67cd-48e0-b354-0200ecc5b98d",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "9f6db50f-df05-4481-b4e8-48e289d578e1",
-                            Email = "kadirgvn92@gmail.com",
-                            EmailConfirmed = false,
-                            LockoutEnabled = false,
-                            Name = "Kadir",
-                            NormalizedEmail = "KADIRGVN92@GMAIL.COM",
-                            NormalizedUserName = "KADIRGVN92",
-                            PasswordHash = "AQAAAAEAACcQAAAAECNSTCH0yygVZvwLrVf3Pd6Q3+zNmirTvzZ9siyVQLCkN/IV+Mk+xT56iK0nhPqjnw==",
-                            PhoneNumber = "5382725403",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "d7745bfa-ced6-4014-a691-c064c3026bd4",
-                            Surname = "Güven",
-                            TwoFactorEnabled = false,
-                            UserName = "KadirGvn92"
-                        },
-                        new
-                        {
-                            Id = "25e55af0-bd93-479f-9120-e85a121c0952",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "50fe22ae-1a22-4ff1-b61c-40f1d3ad0f9a",
-                            Email = "brc_kdr@gmail.com",
-                            EmailConfirmed = false,
-                            LockoutEnabled = false,
-                            Name = "Burcu",
-                            NormalizedEmail = "BRC_KDR@GMAIL.COM",
-                            NormalizedUserName = "BURCUGVN92",
-                            PasswordHash = "AQAAAAEAACcQAAAAEMvaMhIAODE/IBAUlhRNCGK7HERWER7D+L+KskeBc7Ud905e+fSRMX2boa4sI05BBA==",
-                            PhoneNumber = "5382725403",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "27d5aee5-ef87-4800-9f53-a86416d75cdd",
-                            Surname = "Güven",
-                            TwoFactorEnabled = false,
-                            UserName = "BurcuGvn92"
-                        });
                 });
 
             modelBuilder.Entity("IdentityMessage.Models.Mail", b =>
@@ -194,6 +154,9 @@ namespace IdentityMessage.Migrations
 
                     b.Property<string>("MailSubject")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<TimeSpan>("MailTime")
+                        .HasColumnType("time");
 
                     b.Property<string>("ToUserEmail")
                         .HasColumnType("nvarchar(max)");

@@ -1,6 +1,6 @@
 ﻿namespace IdentityMessage.Models;
 
-public class Mail 
+public class InboxMailViewModel
 {
     public int MailId { get; set; }
     public string AppUserID { get; set; }
@@ -14,5 +14,8 @@ public class Mail
     public bool IsDraft { get; set; }
     public bool IsJunk { get; set; }
     public bool IsTrash { get; set; }
-    public AppUser AppUser { get; set; }
+    public int ToplamAdet { get; set; }
+    public PageInfoModel PageInfo { get; set; }
+    public List<Mail> Mails { get; set; }
+    public Mail Mail { get; set; }
 }

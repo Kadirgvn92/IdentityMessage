@@ -1,4 +1,4 @@
-﻿using IdentityMessage.Models.SeedData;
+﻿
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,10 +11,11 @@ public class AppDbContext : IdentityDbContext<AppUser, AppRole, string>
 
     }
     public DbSet<Mail> Mails { get; set; }
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        base.OnModelCreating(modelBuilder);
 
-        modelBuilder.ApplyConfiguration(new MailSeed());
-    }
+    //protected override void OnModelCreating(ModelBuilder modelBuilder)
+    //{
+    //    base.OnModelCreating(modelBuilder);
+
+    //    modelBuilder.ApplyConfiguration(new MailSeed());
+    //}
 }
