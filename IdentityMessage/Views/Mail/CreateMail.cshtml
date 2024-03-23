@@ -13,7 +13,8 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12 ">
-                    <form method="post" enctype="multipart/form-data">
+                    <form method="post" id="form" enctype="multipart/form-data">
+                        <input type="hidden" asp-for="MailId">
                         <div class="card card-primary card-outline">
                             <div class="card-header">
                                 <h3 class="card-title">Yeni Mail</h3>
@@ -21,10 +22,10 @@
 
                             <div class="card-body">
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="Kime :" asp-for="ToUserEmail">
+                                    <input id="to" class="form-control" placeholder="Kime :" asp-for="ToUserEmail">
                                 </div>
                                 <div class="form-group">
-                                    <input class="form-control" placeholder="Konu : " asp-for="MailSubject">
+                                    <input id="subject" class="form-control" placeholder="Konu : " asp-for="MailSubject">
                                 </div>
                                 <div class="form-group">
                                     <label for="Body">Mesajınız</label>
@@ -52,7 +53,7 @@
                         </div>
                         <div class="card-footer">
                             <div class="float-right">
-                                <button type="button" class="btn btn-default"><i class="fas fa-pencil-alt"></i> Taslağa Kaydet</button>
+                                <button type="button" id="btnDraft" class="btn btn-default"><i class="fas fa-pencil-alt"></i> Taslağa Kaydet</button>
                                 <button type="submit" class="btn btn-primary"><i class="far fa-envelope"></i> Gönder</button>
                             </div>
                             <button type="reset" class="btn btn-default"><i class="fas fa-times"></i> Sil</button>
@@ -65,8 +66,11 @@
     </section>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
 
 <script>
     var quill = new Quill('#editor', {
@@ -86,4 +90,33 @@
     quill.on('text-change', function () {
         document.getElementById('Body').value = quill.root.innerHTML;
     });
+
+
+    $('#btnDraft').click(async function () {
+
+        let datas = {
+            ToUserEmail: $("#to").val(),
+            MailSubject: $("#subject").val(),
+            MailContent: $("#Body").val()
+        };
+
+        $.ajax({
+            type: "Post",
+            url: "/Mail/Draft/",
+            data: datas,
+            success: function (func) {
+                let result = jQuery.parseJSON(func);
+                $("#to").val("");
+                $("#subject").val("");
+                $("#Body").val("");
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Taslak kaydedildi.',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+        });
+    });
 </script>
+

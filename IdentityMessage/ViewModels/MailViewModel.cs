@@ -6,9 +6,9 @@ public class MailViewModel
 {
     public int MailId { get; set; }
     public string AppUserID { get; set; }
-    public string ToUserEmail { get; set; }
-    public string MailSubject { get; set; }
-    public string MailContent { get; set; }
+    public string? ToUserEmail { get; set; }
+    public string? MailSubject { get; set; }
+    public string? MailContent { get; set; }
     public DateTime MailDate { get; set; }
     public TimeSpan MailTime { get; set; }
     public bool IsRead { get; set; }

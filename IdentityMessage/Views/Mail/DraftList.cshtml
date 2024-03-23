@@ -87,7 +87,7 @@
                                                     <label for="checkall"></label>
                                                 </div>
                                             </th>
-                                            <th class="text-center">
+                                            <th >
                                                 Taslak
                                             </th>
                                             <th>Konu</th>
@@ -98,7 +98,7 @@
                                     <tbody>
                                         @foreach (var item in Model.Mails)
                                         {
-                                            <tr class="@(item.IsRead == false ? "font-weight-bold" : "")" style="@(item.IsRead == false ? "background-color:darkgray" : "")">
+                                            <tr >
                                                 <td width="50px">
                                                     <div class="icheck-primary">
                                                         <input type="checkbox" value="" id="@item.MailId">
@@ -106,27 +106,13 @@
                                                     </div>
                                                 </td>
                                                 <td class="mailbox-subject align-middle text-danger" width="300px">
-                                                    <a href="/Mail/Draft/@item.MailId" style="color: inherit;"> Taslak </a>
+                                                    <a href="/Mail/....../@item.MailId" style="color: inherit;"> Taslak </a>
                                                 </td>
                                                 <td class="mailbox-subject align-middle" width="300px">
-                                                    <a href="/Mail/Draft/@item.MailId" style="color: inherit;"> @item.MailSubject </a>
+                                                    <a href="/Mail/....../@item.MailId" style="color: inherit;"> @item.MailSubject </a>
                                                 </td>
                                                 <td class="mailbox-subject align-middle">
-
-                                                    @if (@item.MailContent.Length >= 30)
-                                                    {
-                                                        var des = item.MailContent.Substring(0, 20).LastIndexOf(" ");
-                                                        Func<string, string> RemoveHtmlTags = (input) =>
-                                                        {
-                                                            if (string.IsNullOrEmpty(input))
-                                                                return input;
-
-                                                            var regex = new Regex("<.*?>");
-                                                            return regex.Replace(input, "");
-                                                        };
-                                                        <a href="/Mail/MailDetail/@item.MailId" style="color: inherit;"> @RemoveHtmlTags(item.MailContent.Substring(0, des))... </a>
-                                                    }
-                                                    else
+                                                    @if(item.MailContent is null)
                                                     {
                                                         Func<string, string> RemoveHtmlTags = (input) =>
                                                         {
@@ -137,8 +123,19 @@
                                                             return regex.Replace(input, "");
                                                         };
                                                         <a href="/Mail/MailDetail/@item.MailId" style="color: inherit;"> @RemoveHtmlTags(item.MailContent) </a>
-                                                    }
+                                                    }else
+                                                    {
+                                                        Func<string, string> RemoveHtmlTags = (input) =>
+                                                        {
+                                                            if (string.IsNullOrEmpty(input))
+                                                                return input;
 
+                                                            var regex = new Regex("<.*?>");
+                                                            return regex.Replace(input, "");
+                                                        };
+                                                        <a href="/Mail/MailDetail/@item.MailId" style="color: inherit;"> @RemoveHtmlTags(item.MailContent.Substring(0,2))... </a>
+                                                    }
+                                                    
                                                 </td>
                                                 <td class="mailbox-date align-middle" width="300px">@item.MailDate.ToString("dddd, dd MMMM yyyy") -  @item.MailTime.ToString("hh\\:mm")</td>
                                             </tr>
