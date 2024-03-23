@@ -51,6 +51,12 @@
                                 </div>
                             }
                         </div>
+                        @if (TempData["message"] != null)
+                        {
+                            <div class="alert alert-success font-weight-bold mt-3 text-xs">
+                                @TempData["message"]
+                            </div>
+                        }
                         <div class="card-footer">
                             <div class="float-right">
                                 <button type="button" id="btnDraft" class="btn btn-default"><i class="fas fa-pencil-alt"></i> Taslağa Kaydet</button>
@@ -58,7 +64,6 @@
                             </div>
                             <button type="reset" class="btn btn-default"><i class="fas fa-times"></i> Sil</button>
                         </div>
-
                     </form>
                 </div>
             </div>
@@ -73,25 +78,6 @@
 
 
 <script>
-    var quill = new Quill('#editor', {
-        theme: 'snow',
-        modules: {
-            toolbar: [
-                [{ header: [1, 2, false] }],
-                ['bold', 'italic', 'underline', 'strike'],
-                ['blockquote', 'code-block'],
-                [{ color: [] }],
-                [{ list: 'ordered' }, { list: 'bullet' }],
-                ['link', 'image', 'video'],
-                ['clean']
-            ],
-        },
-    });
-    quill.on('text-change', function () {
-        document.getElementById('Body').value = quill.root.innerHTML;
-    });
-
-
     $('#btnDraft').click(async function () {
 
         let datas = {
@@ -118,5 +104,27 @@
             }
         });
     });
+
+
+    var quill = new Quill('#editor', {
+        theme: 'snow',
+        modules: {
+            toolbar: [
+                [{ header: [1, 2, false] }],
+                ['bold', 'italic', 'underline', 'strike'],
+                ['blockquote', 'code-block'],
+                [{ color: [] }],
+                [{ list: 'ordered' }, { list: 'bullet' }],
+                ['link', 'image', 'video'],
+                ['clean']
+            ],
+        },
+    });
+    quill.on('text-change', function () {
+        document.getElementById('Body').value = quill.root.innerHTML;
+    });
+
+
+   
 </script>
 

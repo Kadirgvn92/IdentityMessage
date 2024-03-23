@@ -69,11 +69,62 @@ public class MailController : Controller
 
         return View(model);
     }
+
+    [HttpGet]
+    public async Task<IActionResult> DraftList(int page = 1)
+    {
+        const int pageSize = 10;
+        var user = await _userManager.FindByNameAsync(User.Identity.Name);
+        var model = new MailViewModel
+        {
+            PageInfo = new PageInfoModel()
+            {
+                TotalItems = _context.Mails.Include(x => x.AppUser).Where(x => x.AppUser.Email == user.Email && x.IsDraft && !x.IsTrash).Count(),
+                CurrentPage = page,
+                ItemsPerPage = pageSize,
+            },
+            Mails = _context.Mails.Include(x => x.AppUser).Where(x => x.AppUser.Email == user.Email && x.IsDraft && !x.IsTrash).OrderByDescending(x => x.MailDate).Skip((page - 1) * pageSize).Take(pageSize).ToList(),
+            TotalMails = _context.Mails.Include(x => x.AppUser).Where(x => x.AppUser.Email == user.Email && !x.IsTrash).Count(),
+
+        };
+        return View(model);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Draft(MailViewModel model)
+    {
+        var user = await _userManager.FindByNameAsync(User.Identity.Name);
+
+
+        Mail newMail = new Mail()
+        {
+            AppUserID = user.Id,
+            ToUserEmail = model.ToUserEmail,
+            MailSubject = model.MailSubject,
+            MailContent = model.MailContent,
+            MailDate = DateTime.Now,
+            MailTime = DateTime.Now.TimeOfDay,
+            IsDraft = true,
+            IsImportant = false,
+            IsJunk = false,
+            IsRead = false,
+            IsTrash = false,
+        };
+
+        _context.Mails.Add(newMail);
+        _context.SaveChanges();
+
+        TempData["MessageSuccess"] = "Taslak başarıyla kaydedildi.";
+
+        return RedirectToAction("CreateMail");
+    }
     [HttpGet]
     public async Task<IActionResult> CreateMail(int? id)
     {
+
+        TempData["message"] = TempData["MessageSuccess"];
         var user = await _userManager.FindByNameAsync(User.Identity.Name);
-        var draft = _context.Mails.FirstOrDefault(x => x.MailId == id);
+        var draft = _context.Mails.FirstOrDefault(x => x.MailId == id && x.IsDraft);
         if (draft != null)
         {
             var draftMail = new MailViewModel()
@@ -117,7 +168,7 @@ public class MailController : Controller
             _context.Mails.Add(newMail);
             _context.SaveChanges();
 
-            var deleteDraft = _context.Mails.FirstOrDefault(x => x.MailId == model.MailId);
+            var deleteDraft = _context.Mails.FirstOrDefault(x => x.MailId == model.MailId && x.IsDraft);
             if (deleteDraft != null)
             {
                 _context.Mails.Remove(deleteDraft);
@@ -152,58 +203,6 @@ public class MailController : Controller
         };
         return View(model);
     }
-    [HttpGet]
-    public async Task<IActionResult> DraftList(int page = 1)
-    {
-        const int pageSize = 10;
-        var user = await _userManager.FindByNameAsync(User.Identity.Name);
-        var model = new MailViewModel
-        {
-            PageInfo = new PageInfoModel()
-            {
-                TotalItems = _context.Mails.Include(x => x.AppUser).Where(x => x.AppUser.Email == user.Email).Count(),
-                CurrentPage = page,
-                ItemsPerPage = pageSize,
-            },
-            Mails = _context.Mails.Include(x => x.AppUser).Where(x => x.AppUser.Email == user.Email && x.IsDraft && !x.IsTrash).OrderByDescending(x => x.MailDate).Skip((page - 1) * pageSize).Take(pageSize).ToList(),
-            TotalMails = _context.Mails.Include(x => x.AppUser).Where(x => x.AppUser.Email == user.Email && !x.IsTrash).Count(),
-
-        };
-        return View(model);
-    }
-    [HttpPost]
-    public async Task<IActionResult> Draft(MailViewModel model)
-    {
-        var user = await _userManager.FindByNameAsync(User.Identity.Name);
-
-
-        Mail newMail = new Mail()
-        {
-            AppUserID = user.Id,
-            ToUserEmail = model.ToUserEmail,
-            MailSubject = model.MailSubject,
-            MailContent = model.MailContent,
-            MailDate = DateTime.Now,
-            MailTime = DateTime.Now.TimeOfDay,
-            IsDraft = true,
-            IsImportant = false,
-            IsJunk = false,
-            IsRead = false,
-            IsTrash = false,
-        };
-
-        _context.Mails.Add(newMail);
-        _context.SaveChanges();
-
-        //var deleteDraft = _context.Mails.FirstOrDefault(x => x.MailId == model.MailId);
-        //if (deleteDraft != null)
-        //{
-        //    _context.Mails.Remove(deleteDraft);
-        //    _context.SaveChanges();
-        //}
-
-        await Task.Delay(1600);
-        return RedirectToAction("Index", "Mail");
-    }
+    
 }
 
