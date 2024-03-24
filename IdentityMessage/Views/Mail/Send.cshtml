@@ -33,13 +33,15 @@
                     <!-- /.card-header -->
 
                     <div class="card-body p-0">
-                        @if (Model.PageInfo.TotalItems > Model.PageInfo.ItemsPerPage)
-                        {
+                        
                             <div class="mailbox-controls">
-
+                                <div class="icheck-primary float-left ml-3 mr-1" width="50px">
+                                    <input type="checkbox" value="" id="checkall">
+                                    <label for="checkall"></label>
+                                </div>
                                 <!-- /.btn-group -->
-                                <button type="button" class="btn btn-default btn-sm">
-                                    <i class="fas fa-sync-alt"></i>
+                                <button type="button" class="btn btn-default btn-sm bg-danger">
+                                    <i class="fas fa-trash"></i>
                                 </button>
                                 <div class="float-right">
                                     @Model.PageInfo.CurrentPage - @Model.PageInfo.ItemsPerPage / @Model.PageInfo.TotalPages()
@@ -57,24 +59,8 @@
                                 </div>
                                 <!-- /.float-right -->
                             </div>
-                        }
                         <div class="table-responsive mailbox-messages">
                             <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th width="40px">
-                                            <div class="icheck-primary">
-                                                <input type="checkbox" value="" id="checkall">
-                                                <label for="checkall"></label>
-                                            </div>
-                                        </th>
-                                        <th>Önemli</th>
-                                        <th>Alıcı</th>
-                                        <th>Konu</th>
-                                        <th>Mail İçerik</th>
-                                        <th>Mail Tarihi</th>
-                                    </tr>
-                                </thead>
                                 <tbody>
                                     @foreach (var item in Model.Mails)
                                     {
@@ -99,15 +85,13 @@
                                                     <a href="/Mail/Important/@item.MailId"><i class="fa fa-star text-secondary "></i></a>
                                                 </td>
                                             }
-                                            <td class="mailbox-subject align-middle">
-                                                <a href="/Mail/MailDetail/@item.MailId" style="color: inherit;"> @item.ToUserEmail </a>
-                                            </td>
-                                            <td class="mailbox-subject align-middle" width="300px">
-                                                <a href="/Mail/MailDetail/@item.MailId" style="color: inherit;"> @item.MailSubject </a>
-                                            </td>
-                                            <td class="mailbox-subject align-middle">
-                                                @{
-                                                    var des = item.MailContent.Substring(0, 30).LastIndexOf(" ");
+
+                                            <td class="mailbox-read-time align-middle" width="200px"><a href="read-mail.html" style="color: inherit;">@item.AppUser.Email</a></td>
+                                            <td class="align-middle" width="1500px">
+                                                <b><a href="/Mail/MailDetail/@item.MailId" style="color: inherit;"> @item.MailSubject </a></b>
+                                                -
+                                                @if (item.MailContent is null || item.MailContent.Length < 200)
+                                                {
                                                     Func<string, string> RemoveHtmlTags = (input) =>
                                                     {
                                                         if (string.IsNullOrEmpty(input))
@@ -116,10 +100,23 @@
                                                         var regex = new Regex("<.*?>");
                                                         return regex.Replace(input, "");
                                                     };
+                                                    <a class="mailbox-read-time" href="/Mail/CreateMail/@item.MailId" style="color: inherit;"> @RemoveHtmlTags(item.MailContent) </a>
                                                 }
-                                                <a href="/Mail/MailDetail/@item.MailId" style="color: inherit;"> @RemoveHtmlTags(item.MailContent.Substring(0, des))... </a>
+                                                else
+                                                {
+                                                    var last = item.MailContent.Substring(0, 200).LastIndexOf(" ");
+                                                    Func<string, string> RemoveHtmlTags = (input) =>
+                                                    {
+                                                        if (string.IsNullOrEmpty(input))
+                                                            return input;
+
+                                                        var regex = new Regex("<.*?>");
+                                                        return regex.Replace(input, "");
+                                                    };
+                                                    <a class="mailbox-read-time" href="/Mail/CreateMail/@item.MailId" style="color: inherit;"> @RemoveHtmlTags(item.MailContent.Substring(0, last))... </a>
+                                                }
                                             </td>
-                                            <td class="mailbox-date align-middle" width="300px">@item.MailDate.ToString("dddd, dd MMMM yyyy") -  @item.MailTime.ToString("hh\\:mm")</td>
+                                            <td class="mailbox-read-time font-weight-bold align-middle" width="300px">@item.MailDate.ToString("dddd, dd MMMM yyyy") -  @item.MailTime.ToString("hh\\:mm")</td>
                                         </tr>
                                     }
 

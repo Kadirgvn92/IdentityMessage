@@ -8,6 +8,8 @@
 }
 
 
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
 <div class="content-wrapper ">
 
     <!-- Main content -->
@@ -52,67 +54,49 @@
                     else
                     {
                         <div class="card-body p-0">
-                            @if (Model.PageInfo.TotalItems > Model.PageInfo.ItemsPerPage)
-                            {
-                                <div class="mailbox-controls">
-
-                                    <!-- /.btn-group -->
-                                    <button type="button" class="btn btn-default btn-sm">
-                                        <i class="fas fa-sync-alt"></i>
-                                    </button>
-                                    <div class="float-right">
-                                        @Model.PageInfo.CurrentPage - @Model.PageInfo.ItemsPerPage / @Model.PageInfo.TotalPages()
-                                        <div class="btn-group">
-                                            @if (Model.PageInfo.CurrentPage > 1)
-                                            {
-                                                <a href="/Mail/DraftList/?page=@(Model.PageInfo.CurrentPage-1)" class="btn btn-default btn-sm"><i class="fas fa-chevron-left"></i> </a>
-                                            }
-                                            @if (Model.PageInfo.CurrentPage < Model.PageInfo.TotalPages())
-                                            {
-                                                <a href="/Mail/DraftList/?page=@(Model.PageInfo.CurrentPage+1)" class="btn btn-default btn-sm">><i class="fa fa-chevron-right"></i></a>
-                                            }
-                                        </div>
-                                        <!-- /.btn-group -->
-                                    </div>
-                                    <!-- /.float-right -->
+                            <div class="mailbox-controls">
+                                <div class="icheck-primary float-left ml-3 mr-1" width="50px">
+                                    <input type="checkbox" value="" id="checkall">
+                                    <label for="checkall"></label>
                                 </div>
-                            }
+                                <!-- /.btn-group -->
+                                <button type="button" class="btn btn-default btn-sm bg-danger">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                                <div class="float-right">
+                                    @Model.PageInfo.CurrentPage - @Model.PageInfo.ItemsPerPage / @Model.PageInfo.TotalPages()
+                                    <div class="btn-group">
+                                        @if (Model.PageInfo.CurrentPage > 1)
+                                        {
+                                            <a href="/Mail/DraftList/?page=@(Model.PageInfo.CurrentPage-1)" class="btn btn-default btn-sm"><i class="fas fa-chevron-left"></i> </a>
+                                        }
+                                        @if (Model.PageInfo.CurrentPage < Model.PageInfo.TotalPages())
+                                        {
+                                            <a href="/Mail/DraftList/?page=@(Model.PageInfo.CurrentPage+1)" class="btn btn-default btn-sm">><i class="fa fa-chevron-right"></i></a>
+                                        }
+                                    </div>
+                                    <!-- /.btn-group -->
+                                </div>
+                                <!-- /.float-right -->
+                            </div>
                             <div class="table-responsive mailbox-messages">
                                 <table class="table table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th width="40px">
-                                                <div class="icheck-primary">
-                                                    <input type="checkbox" value="" id="checkall">
-                                                    <label for="checkall"></label>
-                                                </div>
-                                            </th>
-                                            <th >
-                                                Taslak
-                                            </th>
-                                            <th>Konu</th>
-                                            <th>Mail İçerik</th>
-                                            <th>Mail Tarihi</th>
-                                        </tr>
-                                    </thead>
                                     <tbody>
                                         @foreach (var item in Model.Mails)
                                         {
-                                            <tr >
+                                            <tr>
                                                 <td width="50px">
                                                     <div class="icheck-primary">
                                                         <input type="checkbox" value="" id="@item.MailId">
                                                         <label for="@item.MailId"></label>
                                                     </div>
                                                 </td>
-                                                <td class="mailbox-subject align-middle text-danger" width="300px">
-                                                    <a href="/Mail/....../@item.MailId" style="color: inherit;"> Taslak </a>
+                                                <td class="mailbox-subject align-middle text-danger text-center" width="300px">
+                                                    <a href="/Mail/CreateMail/@item.MailId" style="color: inherit;"> Taslak </a>
                                                 </td>
-                                                <td class="mailbox-subject align-middle" width="300px">
-                                                    <a href="/Mail/....../@item.MailId" style="color: inherit;"> @item.MailSubject </a>
-                                                </td>
-                                                <td class="mailbox-subject align-middle">
-                                                    @if(item.MailContent is null)
+                                                <td class="align-middle " width="1500px">
+                                                    <b><a href="/Mail/CreateMail/@item.MailId" style="color: inherit;"> @item.MailSubject </a></b>
+                                                    @if (item.MailContent is null || item.MailContent.Length < 50)
                                                     {
                                                         Func<string, string> RemoveHtmlTags = (input) =>
                                                         {
@@ -122,22 +106,24 @@
                                                             var regex = new Regex("<.*?>");
                                                             return regex.Replace(input, "");
                                                         };
-                                                        <a href="/Mail/MailDetail/@item.MailId" style="color: inherit;"> @RemoveHtmlTags(item.MailContent) </a>
-                                                    }else
-                                                    {
-                                                        Func<string, string> RemoveHtmlTags = (input) =>
-                                                        {
-                                                            if (string.IsNullOrEmpty(input))
-                                                                return input;
-
-                                                            var regex = new Regex("<.*?>");
-                                                            return regex.Replace(input, "");
-                                                        };
-                                                        <a href="/Mail/MailDetail/@item.MailId" style="color: inherit;"> @RemoveHtmlTags(item.MailContent.Substring(0,2))... </a>
+                                                        <a class="mailbox-read-time " href="/Mail/CreateMail/@item.MailId" style="color: inherit;"> @RemoveHtmlTags(item.MailContent) </a>
                                                     }
-                                                    
+                                                    else
+                                                    {
+                                                        var last = item.MailContent.Substring(0, 50).LastIndexOf(" ");
+                                                        Func<string, string> RemoveHtmlTags = (input) =>
+                                                        {
+                                                            if (string.IsNullOrEmpty(input))
+                                                                return input;
+
+                                                            var regex = new Regex("<.*?>");
+                                                            return regex.Replace(input, "");
+                                                        };
+                                                        <a class="mailbox-read-time " href="/Mail/CreateMail/@item.MailId" style="color: inherit;"> @RemoveHtmlTags(item.MailContent.Substring(0, last))... </a>
+                                                    }
+
                                                 </td>
-                                                <td class="mailbox-date align-middle" width="300px">@item.MailDate.ToString("dddd, dd MMMM yyyy") -  @item.MailTime.ToString("hh\\:mm")</td>
+                                                <td class="mailbox-read-time align-middle" width="300px">@item.MailDate.ToString("dddd, dd MMMM yyyy") -  @item.MailTime.ToString("hh\\:mm")</td>
                                             </tr>
                                         }
 
@@ -152,4 +138,36 @@
     </section>
 </div>
 
+<script>
+
+    $('#checkall').change(function () {
+        var checkboxes = $(this).closest('table').find(':checkbox');
+        checkboxes.prop('checked', $(this).prop('checked'));
+    });
+
+    $('#trashSelected').click(function () {
+        var selectedMails = [];
+        $('input[type="checkbox"]:checked').each(function () {
+            selectedMails.push($(this).attr('id'));
+        });
+
+        if (selectedMails.length > 0) {
+            $.ajax({
+                type: 'POST',
+                url: '/Mail/TrashSelected',
+                data: { mailIds: selectedMails },
+                success: function (response) {
+                    // Başarılı yanıtı işle
+                    console.log(response);
+                },
+                error: function (xhr, status, error) {
+                    // Hata durumunu işle
+                    console.error(xhr.responseText);
+                }
+            });
+        } else {
+            alert('Lütfen en az bir öğe seçin.');
+        }
+    });
+</script>
 
