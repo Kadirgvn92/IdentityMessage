@@ -219,7 +219,7 @@ public class MailController : Controller
         };
         return View(model);
     }
-    public async Task<IActionResult> MakeImportant(int id)
+    public async Task<IActionResult> MakeImportant(int id,string redirectAction)
     {
         var user = await _userManager.FindByNameAsync(User.Identity.Name);
         var important = _context.Mails.Find(id);
@@ -232,11 +232,9 @@ public class MailController : Controller
         {
             important.IsImportant = true;
         }
-
         _context.Mails.Update(important);
         _context.SaveChanges();
-        return RedirectToAction("Index");
-
+        return RedirectToAction(redirectAction);
     }
 
 
