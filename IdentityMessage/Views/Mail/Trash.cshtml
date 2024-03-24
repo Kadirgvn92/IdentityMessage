@@ -3,20 +3,18 @@
 @model MailViewModel
 
 @{
-    ViewData["Title"] = "Send";
+    ViewData["Title"] = "Trash";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
 <div class="content-wrapper ">
-
-    <!-- Main content -->
     <section class="content mt-4 m-2">
         <div class="row">
 
             <div class="col-md-12">
                 <div class="card card-primary card-outline">
                     <div class="card-header">
-                        <h3 class="card-title">Giden Kutusu (@Model.TotalMails)</h3>
+                        <h3 class="card-title">Çöp Kutusu (@Model.TotalMails)</h3>
 
                         <div class="card-tools">
                             <div class="input-group input-group-sm">
@@ -28,9 +26,7 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- /.card-tools -->
                     </div>
-                    <!-- /.card-header -->
                     @if (!Model.Mails.Any())
                     {
 
@@ -39,9 +35,9 @@
                             <hr class="" />
                             <br />
                             <h6 class="text-center font-weight-bold text-primary">
-                                Kaydedilmiş giden mailiniz yok.
+                                Kaydedilmiş çöp mailiniz yok.
                                 <br />
-                                Giden mailler daha önce göndermiş olduğunuz e-postaların kaydedip sakladığınız yerdir.
+                                Çöp mailler daha önce size adreslenmiş olan e-postaların kaydedip sakladığınız yerdir.
                             </h6>
                             <br />
                             <br />
@@ -51,26 +47,30 @@
                     else
                     {
                         <div class="card-body p-0">
-
                             <div class="mailbox-controls">
+                                <!-- /.btn-group -->
                                 <div class="icheck-primary float-left ml-3 mr-1" width="50px">
                                     <input type="checkbox" value="" id="checkall">
                                     <label for="checkall"></label>
                                 </div>
-                                <!-- /.btn-group -->
                                 <button type="button" class="btn btn-default btn-sm bg-danger ml-3">
-                                    <i class="fas fa-trash"></i>
+                                    Kalıcı Olarak Sil
+                                </button>
+
+                                <!-- /.btn-group -->
+                                <button type="button" class="btn btn-default btn-sm bg-secondary">
+                                    <i class="fas fa-sync-alt"></i>
                                 </button>
                                 <div class="float-right">
                                     @Model.PageInfo.CurrentPage - @Model.PageInfo.ItemsPerPage / @Model.PageInfo.TotalPages()
                                     <div class="btn-group">
                                         @if (Model.PageInfo.CurrentPage > 1)
                                         {
-                                            <a href="/Mail/Send/?page=@(Model.PageInfo.CurrentPage-1)" class="btn btn-default btn-sm"><i class="fas fa-chevron-left"></i> </a>
+                                            <a href="/Mail/Index/?page=@(Model.PageInfo.CurrentPage-1)" class="btn btn-default btn-sm"><i class="fas fa-chevron-left"></i> </a>
                                         }
                                         @if (Model.PageInfo.CurrentPage < Model.PageInfo.TotalPages())
                                         {
-                                            <a href="/Mail/Send/?page=@(Model.PageInfo.CurrentPage+1)" class="btn btn-default btn-sm">><i class="fa fa-chevron-right"></i></a>
+                                            <a href="/Mail/Index/?page=@(Model.PageInfo.CurrentPage+1)" class="btn btn-default btn-sm">><i class="fa fa-chevron-right"></i></a>
                                         }
                                     </div>
                                     <!-- /.btn-group -->
@@ -82,32 +82,20 @@
                                     <tbody>
                                         @foreach (var item in Model.Mails)
                                         {
-                                            <tr>
+                                            <tr class="@(item.IsRead == false ? "font-weight-bold" : "")" style="@(item.IsRead == false ? "" : "background-color:aliceblue")">
                                                 <td width="50px">
                                                     <div class="icheck-primary">
                                                         <input type="checkbox" value="" id="@item.MailId">
                                                         <label for="@item.MailId"></label>
                                                     </div>
                                                 </td>
-
-                                                @if (item.IsImportant)
-                                                {
-                                                    <td class="mailbox-star align-middle text-center" width="100px">
-                                                        <a href="/Mail/MakeImportant/@item.MailId?redirectAction=Send"><i class="fas fa-star text-warning"></i></a>
-                                                    </td>
-
-                                                }
-                                                else
-                                                {
-                                                    <td class="mailbox-star align-middle text-center" width="100px">
-                                                        <a href="/Mail/MakeImportant/@item.MailId?redirectAction=Send"><i class="fa fa-star text-secondary "></i></a>
-                                                    </td>
-                                                }
-
-                                                <td class="mailbox-read-time align-middle" width="200px"><a href="read-mail.html" style="color: inherit;">@item.AppUser.Email</a></td>
+                                                
+                                                <td class="@(item.IsRead == false ? "" : "mailbox-read-time") align-middle" width="200px">
+                                                    <a href="/Mail/MailDetail/@item.MailId" style="color: inherit;"> <span class=""><i class="fa fa-trash text-danger"></i></span> &nbsp;@item.AppUser.Email</a>
+                                                </td>
                                                 <td class="align-middle" width="1500px">
-                                                    <b><a href="/Mail/MailDetail/@item.MailId" style="color: inherit;"> @item.MailSubject </a></b>
-                                                    -
+                                                    <a href="/Mail/MailDetail/@item.MailId" style="color: inherit;"> @item.MailSubject </a> &nbsp;
+                                                    - &nbsp;
                                                     @if (item.MailContent is null || item.MailContent.Length < 200)
                                                     {
                                                         Func<string, string> RemoveHtmlTags = (input) =>
@@ -134,8 +122,7 @@
                                                         <a class="mailbox-read-time" href="/Mail/MailDetail/@item.MailId" style="color: inherit;"> @RemoveHtmlTags(item.MailContent.Substring(0, last))... </a>
                                                     }
                                                 </td>
-                                                <td class="mailbox-read-time font-weight-bold align-middle" width="300px">@item.MailDate.ToString("dddd, dd MMMM yyyy") -  @item.MailTime.ToString("hh\\:mm")</td>
-                                                <td width="50px"><a href="/Mail/MakeTrash/@item.MailId?redirectAction=Send"><i class="fa fa-trash text-danger"></i></a></td>
+                                                <td class="@(item.IsRead == false ? "" : "mailbox-read-time") font-weight-bold align-middle" width="300px">@item.MailDate.ToString("dddd, dd MMMM yyyy") -  @item.MailTime.ToString("hh\\:mm")</td>
                                             </tr>
                                         }
 
@@ -149,3 +136,4 @@
         </div>
     </section>
 </div>
+

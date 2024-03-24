@@ -29,90 +29,108 @@
                         <!-- /.card-tools -->
                     </div>
                     <!-- /.card-header -->
+                    @if (!Model.Mails.Any())
+                    {
 
-                    <div class="card-body p-0">
-                        <div class="mailbox-controls">
-                            <!-- /.btn-group -->
-                            <div class="icheck-primary float-left ml-3 mr-1" width="50px">
-                                <input type="checkbox" value="" id="checkall">
-                                <label for="checkall"></label>
-                            </div>
-                            <button type="button" class="btn btn-default btn-sm bg-danger ml-3">
-                                <i class="fas fa-trash"></i>
-                            </button>
+                        <div class="container mt-5">
 
-                            <div class="float-right">
-                                @Model.PageInfo.CurrentPage - @Model.PageInfo.ItemsPerPage / @Model.PageInfo.TotalPages()
-                                <div class="btn-group">
-                                    @if (Model.PageInfo.CurrentPage > 1)
-                                    {
-                                        <a href="/Mail/Important/?page=@(Model.PageInfo.CurrentPage-1)" class="btn btn-default btn-sm"><i class="fas fa-chevron-left"></i> </a>
-                                    }
-                                    @if (Model.PageInfo.CurrentPage < Model.PageInfo.TotalPages())
-                                    {
-                                        <a href="/Mail/Important/?page=@(Model.PageInfo.CurrentPage+1)" class="btn btn-default btn-sm">><i class="fa fa-chevron-right"></i></a>
-                                    }
-                                </div>
+                            <hr class="" />
+                            <br />
+                            <h6 class="text-center font-weight-bold text-primary">
+                                Kaydedilmiş önemli mailiniz yok.
+                                <br />
+                                Önemli mailler önemli olarak işaretledğiniz e-postalarınızı kaydedip sakladığınız yerdir.
+                            </h6>
+                            <br />
+                            <br />
+                        </div>
+
+                    }
+                    else
+                    {
+                        <div class="card-body p-0">
+                            <div class="mailbox-controls">
                                 <!-- /.btn-group -->
+                                <div class="icheck-primary float-left ml-3 mr-1" width="50px">
+                                    <input type="checkbox" value="" id="checkall">
+                                    <label for="checkall"></label>
+                                </div>
+                                <button type="button" class="btn btn-default btn-sm bg-danger ml-3">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+
+                                <div class="float-right">
+                                    @Model.PageInfo.CurrentPage - @Model.PageInfo.ItemsPerPage / @Model.PageInfo.TotalPages()
+                                    <div class="btn-group">
+                                        @if (Model.PageInfo.CurrentPage > 1)
+                                        {
+                                            <a href="/Mail/Important/?page=@(Model.PageInfo.CurrentPage-1)" class="btn btn-default btn-sm"><i class="fas fa-chevron-left"></i> </a>
+                                        }
+                                        @if (Model.PageInfo.CurrentPage < Model.PageInfo.TotalPages())
+                                        {
+                                            <a href="/Mail/Important/?page=@(Model.PageInfo.CurrentPage+1)" class="btn btn-default btn-sm">><i class="fa fa-chevron-right"></i></a>
+                                        }
+                                    </div>
+                                    <!-- /.btn-group -->
+                                </div>
+                                <!-- /.float-right -->
                             </div>
-                            <!-- /.float-right -->
-                        </div>
-                        <div class="table-responsive mailbox-messages">
-                            <table class="table table-hover">
-                                <tbody>
-                                    @foreach (var item in Model.Mails)
-                                    {
-                                        <tr>
-                                            <td width="50px">
-                                                <div class="icheck-primary">
-                                                    <input type="checkbox" value="" id="@item.MailId">
-                                                    <label for="@item.MailId"></label>
-                                                </div>
-                                            </td>
+                            <div class="table-responsive mailbox-messages">
+                                <table class="table table-hover">
+                                    <tbody>
+                                        @foreach (var item in Model.Mails)
+                                        {
+                                            <tr>
+                                                <td width="50px">
+                                                    <div class="icheck-primary">
+                                                        <input type="checkbox" value="" id="@item.MailId">
+                                                        <label for="@item.MailId"></label>
+                                                    </div>
+                                                </td>
 
-                                            <td class="mailbox-star align-middle text-center" width="100px">
-                                                <a href="/Mail/Important/@item.MailId"><i class="fas fa-star text-warning"></i></a>
-                                            </td>
+                                                <td class="mailbox-star align-middle text-center" width="100px">
+                                                    <a href="/Mail/MakeImportant/@item.MailId?redirectAction=Important"><i class="fas fa-star text-warning"></i></a>
+                                                </td>
 
-                                            <td class="mailbox-read-time align-middle" width="200px"><a href="read-mail.html" style="color: inherit;">@item.AppUser.Email</a></td>
-                                            <td class="align-middle" width="1500px">
-                                                <b><a href="/Mail/MailDetail/@item.MailId" style="color: inherit;"> @item.MailSubject </a></b>
-                                                -
-                                                @if (item.MailContent is null || item.MailContent.Length < 200)
-                                                {
-                                                    Func<string, string> RemoveHtmlTags = (input) =>
+                                                <td class="mailbox-read-time align-middle" width="200px"><a href="read-mail.html" style="color: inherit;">@item.AppUser.Email</a></td>
+                                                <td class="align-middle" width="1500px">
+                                                    <b><a href="/Mail/MailDetail/@item.MailId" style="color: inherit;"> @item.MailSubject </a></b>
+                                                    -
+                                                    @if (item.MailContent is null || item.MailContent.Length < 200)
                                                     {
-                                                        if (string.IsNullOrEmpty(input))
-                                                            return input;
+                                                        Func<string, string> RemoveHtmlTags = (input) =>
+                                                        {
+                                                            if (string.IsNullOrEmpty(input))
+                                                                return input;
 
-                                                        var regex = new Regex("<.*?>");
-                                                        return regex.Replace(input, "");
-                                                    };
-                                                    <a class="mailbox-read-time" href="/Mail/MailDetail/@item.MailId" style="color: inherit;"> @RemoveHtmlTags(item.MailContent) </a>
-                                                }
-                                                else
-                                                {
-                                                    var last = item.MailContent.Substring(0, 200).LastIndexOf(" ");
-                                                    Func<string, string> RemoveHtmlTags = (input) =>
+                                                            var regex = new Regex("<.*?>");
+                                                            return regex.Replace(input, "");
+                                                        };
+                                                        <a class="mailbox-read-time" href="/Mail/MailDetail/@item.MailId" style="color: inherit;"> @RemoveHtmlTags(item.MailContent) </a>
+                                                    }
+                                                    else
                                                     {
-                                                        if (string.IsNullOrEmpty(input))
-                                                            return input;
+                                                        var last = item.MailContent.Substring(0, 200).LastIndexOf(" ");
+                                                        Func<string, string> RemoveHtmlTags = (input) =>
+                                                        {
+                                                            if (string.IsNullOrEmpty(input))
+                                                                return input;
 
-                                                        var regex = new Regex("<.*?>");
-                                                        return regex.Replace(input, "");
-                                                    };
-                                                    <a class="mailbox-read-time" href="/Mail/MailDetail/@item.MailId" style="color: inherit;"> @RemoveHtmlTags(item.MailContent.Substring(0, last))... </a>
-                                                }
-                                            </td>
-                                            <td class="mailbox-read-time font-weight-bold align-middle" width="300px">@item.MailDate.ToString("dddd, dd MMMM yyyy") -  @item.MailTime.ToString("hh\\:mm")</td>
-                                        </tr>
-                                    }
+                                                            var regex = new Regex("<.*?>");
+                                                            return regex.Replace(input, "");
+                                                        };
+                                                        <a class="mailbox-read-time" href="/Mail/MailDetail/@item.MailId" style="color: inherit;"> @RemoveHtmlTags(item.MailContent.Substring(0, last))... </a>
+                                                    }
+                                                </td>
+                                                <td class="mailbox-read-time font-weight-bold align-middle" width="300px">@item.MailDate.ToString("dddd, dd MMMM yyyy") -  @item.MailTime.ToString("hh\\:mm")</td>
+                                            </tr>
+                                        }
 
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                    </div>
-
+                    }
                 </div>
             </div>
         </div>

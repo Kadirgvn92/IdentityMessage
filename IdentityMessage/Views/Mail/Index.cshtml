@@ -20,7 +20,7 @@
                     <div class="card-header">
                         <h3 class="card-title">Gelen Kutusu (@Model.TotalMails)</h3>
 
-                        <div class="card-tools"> 
+                        <div class="card-tools">
                             <div class="input-group input-group-sm">
                                 <input type="text" class="form-control" placeholder="Mesaj Ara">
                                 <div class="input-group-append">
@@ -33,104 +33,123 @@
                         <!-- /.card-tools -->
                     </div>
                     <!-- /.card-header -->
+                    @if (!Model.Mails.Any())
+                    {
 
-                    <div class="card-body p-0">
-                        <div class="mailbox-controls">
-                            <!-- /.btn-group -->
-                            <div class="icheck-primary float-left ml-3 mr-1" width="50px">
-                                <input type="checkbox" value="" id="checkall">
-                                <label for="checkall"></label>
-                            </div>
-                            <button type="button" class="btn btn-default btn-sm bg-danger ml-3">
-                                <i class="fas fa-trash"></i>
-                            </button>
+                        <div class="container mt-5">
 
-                            <!-- /.btn-group -->
-                            <button type="button" class="btn btn-default btn-sm bg-secondary">
-                                <i class="fas fa-sync-alt"></i>
-                            </button>
-                            <div class="float-right">
-                                @Model.PageInfo.CurrentPage - @Model.PageInfo.ItemsPerPage / @Model.PageInfo.TotalPages()
-                                <div class="btn-group">
-                                    @if (Model.PageInfo.CurrentPage > 1)
-                                    {
-                                        <a href="/Mail/Index/?page=@(Model.PageInfo.CurrentPage-1)" class="btn btn-default btn-sm"><i class="fas fa-chevron-left"></i> </a>
-                                    }
-                                    @if (Model.PageInfo.CurrentPage < Model.PageInfo.TotalPages())
-                                    {
-                                        <a href="/Mail/Index/?page=@(Model.PageInfo.CurrentPage+1)" class="btn btn-default btn-sm">><i class="fa fa-chevron-right"></i></a>
-                                    }
-                                </div>
-                                <!-- /.btn-group -->
-                            </div>
-                            <!-- /.float-right -->
+                            <hr class="" />
+                            <br />
+                            <h6 class="text-center font-weight-bold text-primary">
+                                Kaydedilmiş gelen mailiniz yok.
+                                <br />
+                                Gelen mailler daha önce size adreslenmiş olan e-postaların kaydedip sakladığınız yerdir.
+                            </h6>
+                            <br />
+                            <br />
                         </div>
-                        <div class="table-responsive mailbox-messages">
-                            <table class="table table-hover">
-                                <tbody>
-                                    @foreach (var item in Model.Mails)
-                                    {
-                                        <tr class="@(item.IsRead == false ? "font-weight-bold" : "")" style="@(item.IsRead == false ? "" : "background-color:aliceblue")">
-                                            <td width="50px">
-                                                <div class="icheck-primary">
-                                                    <input type="checkbox" value="" id="@item.MailId">
-                                                    <label for="@item.MailId"></label>
-                                                </div>
-                                            </td>
 
-                                            @if (item.IsImportant)
-                                            {
-                                                <td class="mailbox-star align-middle text-center" width="100px">
-                                                    <a href="/Mail/MakeImportant/@item.MailId?redirectAction=Index"><i class="fas fa-star text-warning"></i></a>
+                    }
+                    else
+                    {
+                        <div class="card-body p-0">
+                            <div class="mailbox-controls">
+                                <!-- /.btn-group -->
+                                <div class="icheck-primary float-left ml-3 mr-1" width="50px">
+                                    <input type="checkbox" value="" id="checkall">
+                                    <label for="checkall"></label>
+                                </div>
+                                <button type="button" class="btn btn-default btn-sm bg-danger ml-3">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+
+                                <!-- /.btn-group -->
+                                <button type="button" class="btn btn-default btn-sm bg-secondary">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                                <div class="float-right">
+                                    @Model.PageInfo.CurrentPage - @Model.PageInfo.ItemsPerPage / @Model.PageInfo.TotalPages()
+                                    <div class="btn-group">
+                                        @if (Model.PageInfo.CurrentPage > 1)
+                                        {
+                                            <a href="/Mail/Index/?page=@(Model.PageInfo.CurrentPage-1)" class="btn btn-default btn-sm"><i class="fas fa-chevron-left"></i> </a>
+                                        }
+                                        @if (Model.PageInfo.CurrentPage < Model.PageInfo.TotalPages())
+                                        {
+                                            <a href="/Mail/Index/?page=@(Model.PageInfo.CurrentPage+1)" class="btn btn-default btn-sm">><i class="fa fa-chevron-right"></i></a>
+                                        }
+                                    </div>
+                                    <!-- /.btn-group -->
+                                </div>
+                                <!-- /.float-right -->
+                            </div>
+                            <div class="table-responsive mailbox-messages">
+                                <table class="table table-hover">
+                                    <tbody>
+                                        @foreach (var item in Model.Mails)
+                                        {
+                                            <tr class="@(item.IsRead == false ? "font-weight-bold" : "")" style="@(item.IsRead == false ? "" : "background-color:aliceblue")">
+                                                <td width="50px">
+                                                    <div class="icheck-primary">
+                                                        <input type="checkbox" value="" id="@item.MailId">
+                                                        <label for="@item.MailId"></label>
+                                                    </div>
                                                 </td>
 
-                                            }
-                                            else
-                                            {
-                                                <td class="mailbox-star align-middle text-center" width="100px">
-                                                    <a href="/Mail/MakeImportant/@item.MailId?redirectAction=Index"><i class="fa fa-star text-secondary "></i></a>
-                                                </td>
-                                            }
-
-                                            <td class="@(item.IsRead == false ? "" : "mailbox-read-time") align-middle" width="200px"><a href="/Mail/MailDetail/@item.MailId" style="color: inherit;">@item.AppUser.Email</a></td>
-                                            <td class="align-middle" width="1500px">
-                                                <a href="/Mail/MailDetail/@item.MailId" style="color: inherit;"> @item.MailSubject </a> &nbsp;
-                                                - &nbsp;
-                                                @if (item.MailContent is null || item.MailContent.Length < 200)
+                                                @if (item.IsImportant)
                                                 {
-                                                    Func<string, string> RemoveHtmlTags = (input) =>
-                                                    {
-                                                        if (string.IsNullOrEmpty(input))
-                                                            return input;
+                                                    <td class="mailbox-star align-middle text-center" width="100px">
+                                                        <a href="/Mail/MakeImportant/@item.MailId?redirectAction=Index"><i class="fas fa-star text-warning"></i></a>
+                                                    </td>
 
-                                                        var regex = new Regex("<.*?>");
-                                                        return regex.Replace(input, "");
-                                                    };
-                                                    <a class="mailbox-read-time" href="/Mail/MailDetail/@item.MailId" style="color: inherit;"> @RemoveHtmlTags(item.MailContent) </a>
                                                 }
                                                 else
                                                 {
-                                                    var last = item.MailContent.Substring(0, 200).LastIndexOf(" ");
-                                                    Func<string, string> RemoveHtmlTags = (input) =>
-                                                    {
-                                                        if (string.IsNullOrEmpty(input))
-                                                            return input;
-
-                                                        var regex = new Regex("<.*?>");
-                                                        return regex.Replace(input, "");
-                                                    };
-                                                    <a class="mailbox-read-time" href="/Mail/MailDetail/@item.MailId" style="color: inherit;"> @RemoveHtmlTags(item.MailContent.Substring(0, last))... </a>
+                                                    <td class="mailbox-star align-middle text-center" width="100px">
+                                                        <a href="/Mail/MakeImportant/@item.MailId?redirectAction=Index"><i class="fa fa-star text-secondary "></i></a>
+                                                    </td>
                                                 }
-                                            </td>
-                                            <td class="@(item.IsRead == false ? "" : "mailbox-read-time") font-weight-bold align-middle" width="300px">@item.MailDate.ToString("dddd, dd MMMM yyyy") -  @item.MailTime.ToString("hh\\:mm")</td>
-                                        </tr>
-                                    }
 
-                                </tbody>
-                            </table>
+                                                <td class="@(item.IsRead == false ? "" : "mailbox-read-time") align-middle" width="200px"><a href="/Mail/MailDetail/@item.MailId" style="color: inherit;">@item.AppUser.Email</a></td>
+                                                <td class="align-middle" width="1500px">
+                                                    <a href="/Mail/MailDetail/@item.MailId" style="color: inherit;"> @item.MailSubject </a> &nbsp;
+                                                    - &nbsp;
+                                                    @if (item.MailContent is null || item.MailContent.Length < 200)
+                                                    {
+                                                        Func<string, string> RemoveHtmlTags = (input) =>
+                                                        {
+                                                            if (string.IsNullOrEmpty(input))
+                                                                return input;
+
+                                                            var regex = new Regex("<.*?>");
+                                                            return regex.Replace(input, "");
+                                                        };
+                                                        <a class="mailbox-read-time" href="/Mail/MailDetail/@item.MailId" style="color: inherit;"> @RemoveHtmlTags(item.MailContent) </a>
+                                                    }
+                                                    else
+                                                    {
+                                                        var last = item.MailContent.Substring(0, 200).LastIndexOf(" ");
+                                                        Func<string, string> RemoveHtmlTags = (input) =>
+                                                        {
+                                                            if (string.IsNullOrEmpty(input))
+                                                                return input;
+
+                                                            var regex = new Regex("<.*?>");
+                                                            return regex.Replace(input, "");
+                                                        };
+                                                        <a class="mailbox-read-time" href="/Mail/MailDetail/@item.MailId" style="color: inherit;"> @RemoveHtmlTags(item.MailContent.Substring(0, last))... </a>
+                                                    }
+                                                </td>
+                                                <td class="@(item.IsRead == false ? "" : "mailbox-read-time") font-weight-bold align-middle" width="300px">@item.MailDate.ToString("dddd, dd MMMM yyyy") -  @item.MailTime.ToString("hh\\:mm")</td>
+                                                <td width="50px"><a href="/Mail/MakeTrash/@item.MailId?redirectAction=Index"><i class="fa fa-trash text-danger"></i></a></td>
+                                            </tr>
+                                        }
+
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                    </div>
-
+                    }
                 </div>
             </div>
         </div>

@@ -31,6 +31,9 @@ public class _AdminSidebarPartial : ViewComponent
 
             ViewBag.Important = _context.Mails.Include(x => x.AppUser).Where(x => (x.AppUserID == values.Id || x.ToUserEmail == values.Email) && x.IsImportant && !x.IsDraft && !x.IsTrash && !x.IsJunk).Count();
 
+            ViewBag.Trash = _context.Mails.Include(x => x.AppUser).Where(x => (x.AppUserID == values.Id || x.ToUserEmail == values.Email) && x.IsTrash).Count();
+
+
             return View(values);
         }
         return View();

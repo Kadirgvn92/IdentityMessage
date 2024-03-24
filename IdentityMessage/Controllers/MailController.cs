@@ -210,12 +210,12 @@ public class MailController : Controller
         {
             PageInfo = new PageInfoModel()
             {
-                TotalItems = _context.Mails.Include(x => x.AppUser).Where(x => x.AppUserID == user.Id || x.ToUserEmail == user.Email && x.IsImportant && !x.IsDraft && !x.IsTrash && !x.IsJunk).Count(),
+                TotalItems = _context.Mails.Include(x => x.AppUser).Where(x => (x.AppUserID == user.Id || x.ToUserEmail == user.Email) && x.IsImportant && !x.IsDraft && !x.IsTrash && !x.IsJunk).Count(),
                 CurrentPage = page,
                 ItemsPerPage = pageSize,
             },
             Mails = _context.Mails.Include(x => x.AppUser).Where(x => (x.AppUserID == user.Id || x.ToUserEmail == user.Email) && x.IsImportant && !x.IsDraft && !x.IsTrash && !x.IsJunk).OrderByDescending(x => x.MailDate).Skip((page - 1) * pageSize).Take(pageSize).ToList(),
-            TotalMails = _context.Mails.Include(x => x.AppUser).Where(x => x.AppUserID == user.Id || x.ToUserEmail == user.Email && x.IsImportant && !x.IsDraft && !x.IsTrash && !x.IsJunk).Count(),
+            TotalMails = _context.Mails.Include(x => x.AppUser).Where(x => (x.AppUserID == user.Id || x.ToUserEmail == user.Email) && x.IsImportant && !x.IsDraft && !x.IsTrash && !x.IsJunk).Count(),
 
         };
         return View(model);
@@ -238,6 +238,45 @@ public class MailController : Controller
         return RedirectToAction(redirectAction);
     }
 
+    [HttpGet]
+    public async Task<IActionResult> Trash(int page = 1)
+    {
+        const int pageSize = 10;
+        var user = await _userManager.FindByNameAsync(User.Identity.Name);
+        var model = new MailViewModel
+        {
+            PageInfo = new PageInfoModel()
+            {
+                TotalItems = _context.Mails.Include(x => x.AppUser).Where(x => (x.AppUserID == user.Id || x.ToUserEmail == user.Email) && x.IsTrash).Count(),
+                CurrentPage = page,
+                ItemsPerPage = pageSize,
+            },
+            Mails = _context.Mails.Include(x => x.AppUser).Where(x => (x.AppUserID == user.Id || x.ToUserEmail == user.Email) && x.IsTrash).OrderByDescending(x => x.MailDate).Skip((page - 1) * pageSize).Take(pageSize).ToList(),
+            TotalMails = _context.Mails.Include(x => x.AppUser).Where(x => (x.AppUserID == user.Id || x.ToUserEmail == user.Email) && x.IsTrash).Count(),
 
+        };
+        return View(model);
+    }
+    public async Task<IActionResult> MakeTrash(int id,string redirectAction)
+    {
+        var user = await _userManager.FindByNameAsync(User.Identity.Name);
+        var trash = _context.Mails.Find(id);
+
+        trash.IsTrash = true;
+
+        _context.Mails.Update(trash);
+        _context.SaveChanges();
+        return RedirectToAction(redirectAction);
+    }
+
+    public async Task<IActionResult> DeleteMail(int id)
+    {
+        var user = await _userManager.FindByNameAsync(User.Identity.Name);
+        var trash = _context.Mails.Find(id);
+
+        _context.Mails.Remove(trash);
+        _context.SaveChanges();
+        return RedirectToAction("Trash");
+    }
 }
 
