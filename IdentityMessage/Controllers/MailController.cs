@@ -26,12 +26,12 @@ public class MailController : Controller
         {
             PageInfo = new PageInfoModel()
             {
-                TotalItems = _context.Mails.Where(x => x.ToUserEmail == user.Email && !x.IsTrash).Count(),
+                TotalItems = _context.Mails.Where(x => x.ToUserEmail == user.Email && !x.IsTrash && !x.IsJunk).Count(),
                 CurrentPage = page,
                 ItemsPerPage = pageSize,
             },
-            Mails = _context.Mails.Include(x => x.AppUser).Where(x => x.ToUserEmail == user.Email && !x.IsDraft && !x.IsTrash).OrderByDescending(x => x.MailDate).Skip((page - 1) * pageSize).Take(pageSize).ToList(),
-            TotalMails = _context.Mails.Where(x => x.ToUserEmail == user.Email && !x.IsDraft && !x.IsTrash).Count(),
+            Mails = _context.Mails.Include(x => x.AppUser).Where(x => x.ToUserEmail == user.Email && !x.IsDraft && !x.IsTrash && !x.IsJunk).OrderByDescending(x => x.MailDate).Skip((page - 1) * pageSize).Take(pageSize).ToList(),
+            TotalMails = _context.Mails.Where(x => x.ToUserEmail == user.Email && !x.IsDraft && !x.IsTrash && !x.IsJunk).Count(),
 
         };
         return View(model);
@@ -306,6 +306,17 @@ public class MailController : Controller
 
         };
         return View(model);
+    }
+    public async Task<IActionResult> MakeJunk(int id, string redirectAction)
+    {
+        var user = await _userManager.FindByNameAsync(User.Identity.Name);
+        var junk = _context.Mails.Find(id);
+
+        junk.IsJunk = true;
+
+        _context.Mails.Update(junk);
+        _context.SaveChanges();
+        return RedirectToAction(redirectAction);
     }
 }
 

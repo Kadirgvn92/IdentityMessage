@@ -50,13 +50,19 @@
                     else
                     {
                         <div class="card-body p-0">
-                            <div class="mailbox-controls">
+                            <div class="mailbox-controls  d-flex justify-content-between">
                                 <!-- /.btn-group -->
                                 <div class="icheck-primary float-left ml-3 mr-1" width="50px">
                                     <input type="checkbox" value="" id="checkall">
                                     <label for="checkall"></label>
                                 </div>
-
+                                <div class="text-center">
+                                    <a href="/Mail/DeleteAllMail" class="btn btn-default btn-sm bg-danger ml-3">
+                                        Spam Kutusunu Boşalt
+                                    </a>
+                                    &nbsp; &nbsp;
+                                    <span class="mailbox-read-time">Spam Kutusu'ndaki iletiler 30 günün sonunda otomatik olarak silinir. </span>
+                                </div>
 
                                 <div class="float-right">
                                     @Model.PageInfo.CurrentPage - @Model.PageInfo.ItemsPerPage / @Model.PageInfo.TotalPages()
@@ -79,21 +85,16 @@
                                     <tbody>
                                         @foreach (var item in Model.Mails)
                                         {
-                                            <tr>
+                                            <tr style="background-color:aliceblue">
                                                 <td width="50px">
                                                     <div class="icheck-primary">
                                                         <input type="checkbox" value="" id="@item.MailId">
                                                         <label for="@item.MailId"></label>
                                                     </div>
                                                 </td>
-
-                                                <td class="mailbox-star align-middle text-center" width="100px">
-                                                    <a href="/Mail/MakeImportant/@item.MailId?redirectAction=Important"><i class="fas fa-star text-warning"></i></a>
-                                                </td>
-
-                                                <td class="mailbox-read-time align-middle" width="200px"><a href="read-mail.html" style="color: inherit;">@item.AppUser.Email</a></td>
+                                                <td class="mailbox-read-time align-middle" width="200px"><a href="read-mail.html" style="color: inherit;"> <span class=""><i class="fi fi-sr-exclamation text-secondary"></i></span> &nbsp;@item.AppUser.Email</a></td>
                                                 <td class="align-middle" width="1500px">
-                                                    <b><a href="/Mail/MailDetail/@item.MailId" style="color: inherit;"> @item.MailSubject </a></b>
+                                                    <a href="/Mail/MailDetail/@item.MailId" style="color: inherit;"> @item.MailSubject </a>
                                                     -
                                                     @if (item.MailContent is null || item.MailContent.Length < 200)
                                                     {
@@ -122,6 +123,7 @@
                                                     }
                                                 </td>
                                                 <td class="mailbox-read-time font-weight-bold align-middle" width="300px">@item.MailDate.ToString("dddd, dd MMMM yyyy") -  @item.MailTime.ToString("hh\\:mm")</td>
+                                                <td width="50px"><a href="/Mail/MakeTrash/@item.MailId?redirectAction=Index"><i class="fa fa-trash text-danger"></i></a></td>
                                             </tr>
                                         }
 

@@ -23,7 +23,7 @@ public class _AdminSidebarPartial : ViewComponent
         {
             var values = await _userManager.FindByNameAsync(user);
 
-            ViewBag.Index = _context.Mails.Where(x => x.ToUserEmail == values.Email && !x.IsDraft && !x.IsTrash).Count();
+            ViewBag.Index = _context.Mails.Where(x => x.ToUserEmail == values.Email && !x.IsDraft && !x.IsTrash && !x.IsJunk).Count();
 
             ViewBag.DrafList = _context.Mails.Include(x => x.AppUser).Where(x => x.AppUser.Email == values.Email && x.IsDraft && !x.IsTrash).Count();
 

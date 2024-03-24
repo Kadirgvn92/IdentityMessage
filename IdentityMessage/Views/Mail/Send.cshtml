@@ -134,6 +134,7 @@
                                                 </td>
                                                 <td class="mailbox-read-time font-weight-bold align-middle" width="300px">@item.MailDate.ToString("dddd, dd MMMM yyyy") -  @item.MailTime.ToString("hh\\:mm")</td>
                                                 <td width="50px"><a href="/Mail/MakeTrash/@item.MailId?redirectAction=Send"><i class="fa fa-trash text-danger"></i></a></td>
+                                                <td width="50px"><a href="/Mail/MakeJunk/@item.MailId?redirectAction=Send"><i class="fi fi-sr-exclamation text-secondary"></i></a></td>
                                             </tr>
                                         }
 
