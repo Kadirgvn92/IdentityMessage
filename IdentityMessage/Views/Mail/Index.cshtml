@@ -36,12 +36,12 @@
 
                     <div class="card-body p-0">
                         <div class="mailbox-controls">
+                            <!-- /.btn-group -->
                             <div class="icheck-primary float-left ml-3 mr-1" width="50px">
                                 <input type="checkbox" value="" id="checkall">
                                 <label for="checkall"></label>
                             </div>
-                            <!-- /.btn-group -->
-                            <button type="button" class="btn btn-default btn-sm bg-danger">
+                            <button type="button" class="btn btn-default btn-sm bg-danger ml-3">
                                 <i class="fas fa-trash"></i>
                             </button>
 
@@ -96,8 +96,8 @@
                                             <td class="align-middle" width="1500px">
                                                 <b><a href="/Mail/MailDetail/@item.MailId" style="color: inherit;"> @item.MailSubject </a></b>
                                                 -
-                                                @{
-                                                    // var des = item.MailContent.Substring(0, 50).LastIndexOf(" ");
+                                                @if (item.MailContent is null || item.MailContent.Length < 200)
+                                                {
                                                     Func<string, string> RemoveHtmlTags = (input) =>
                                                     {
                                                         if (string.IsNullOrEmpty(input))
@@ -106,8 +106,21 @@
                                                         var regex = new Regex("<.*?>");
                                                         return regex.Replace(input, "");
                                                     };
+                                                    <a class="mailbox-read-time" href="/Mail/MailDetail/@item.MailId" style="color: inherit;"> @RemoveHtmlTags(item.MailContent) </a>
                                                 }
-                                                <a class="mailbox-read-time" href="/Mail/MailDetail/@item.MailId" style="color: inherit;"> @RemoveHtmlTags(item.MailContent) </a>
+                                                else
+                                                {
+                                                    var last = item.MailContent.Substring(0, 200).LastIndexOf(" ");
+                                                    Func<string, string> RemoveHtmlTags = (input) =>
+                                                    {
+                                                        if (string.IsNullOrEmpty(input))
+                                                            return input;
+
+                                                        var regex = new Regex("<.*?>");
+                                                        return regex.Replace(input, "");
+                                                    };
+                                                    <a class="mailbox-read-time" href="/Mail/MailDetail/@item.MailId" style="color: inherit;"> @RemoveHtmlTags(item.MailContent.Substring(0, last))... </a>
+                                                }
                                             </td>
                                             <td class="mailbox-read-time font-weight-bold align-middle" width="300px">@item.MailDate.ToString("dddd, dd MMMM yyyy") -  @item.MailTime.ToString("hh\\:mm")</td>
                                         </tr>
@@ -123,10 +136,3 @@
         </div>
     </section>
 </div>
-
-<script>
-    $('#checkall').change(function () {
-        var checkboxes = $(this).closest('table').find(':checkbox');
-        checkboxes.prop('checked', $(this).prop('checked'));
-    });
-</script>

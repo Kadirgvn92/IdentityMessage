@@ -33,38 +33,38 @@
                     <!-- /.card-header -->
 
                     <div class="card-body p-0">
-                        
-                            <div class="mailbox-controls">
-                                <div class="icheck-primary float-left ml-3 mr-1" width="50px">
-                                    <input type="checkbox" value="" id="checkall">
-                                    <label for="checkall"></label>
+
+                        <div class="mailbox-controls">
+                            <div class="icheck-primary float-left ml-3 mr-1" width="50px">
+                                <input type="checkbox" value="" id="checkall">
+                                <label for="checkall"></label>
+                            </div>
+                            <!-- /.btn-group -->
+                            <button type="button" class="btn btn-default btn-sm bg-danger ml-3">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                            <div class="float-right">
+                                @Model.PageInfo.CurrentPage - @Model.PageInfo.ItemsPerPage / @Model.PageInfo.TotalPages()
+                                <div class="btn-group">
+                                    @if (Model.PageInfo.CurrentPage > 1)
+                                    {
+                                        <a href="/Mail/Send/?page=@(Model.PageInfo.CurrentPage-1)" class="btn btn-default btn-sm"><i class="fas fa-chevron-left"></i> </a>
+                                    }
+                                    @if (Model.PageInfo.CurrentPage < Model.PageInfo.TotalPages())
+                                    {
+                                        <a href="/Mail/Send/?page=@(Model.PageInfo.CurrentPage+1)" class="btn btn-default btn-sm">><i class="fa fa-chevron-right"></i></a>
+                                    }
                                 </div>
                                 <!-- /.btn-group -->
-                                <button type="button" class="btn btn-default btn-sm bg-danger">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                                <div class="float-right">
-                                    @Model.PageInfo.CurrentPage - @Model.PageInfo.ItemsPerPage / @Model.PageInfo.TotalPages()
-                                    <div class="btn-group">
-                                        @if (Model.PageInfo.CurrentPage > 1)
-                                        {
-                                            <a href="/Mail/Send/?page=@(Model.PageInfo.CurrentPage-1)" class="btn btn-default btn-sm"><i class="fas fa-chevron-left"></i> </a>
-                                        }
-                                        @if (Model.PageInfo.CurrentPage < Model.PageInfo.TotalPages())
-                                        {
-                                            <a href="/Mail/Send/?page=@(Model.PageInfo.CurrentPage+1)" class="btn btn-default btn-sm">><i class="fa fa-chevron-right"></i></a>
-                                        }
-                                    </div>
-                                    <!-- /.btn-group -->
-                                </div>
-                                <!-- /.float-right -->
                             </div>
+                            <!-- /.float-right -->
+                        </div>
                         <div class="table-responsive mailbox-messages">
                             <table class="table table-hover">
                                 <tbody>
                                     @foreach (var item in Model.Mails)
                                     {
-                                        <tr >
+                                        <tr>
                                             <td width="50px">
                                                 <div class="icheck-primary">
                                                     <input type="checkbox" value="" id="@item.MailId">
@@ -100,7 +100,7 @@
                                                         var regex = new Regex("<.*?>");
                                                         return regex.Replace(input, "");
                                                     };
-                                                    <a class="mailbox-read-time" href="/Mail/CreateMail/@item.MailId" style="color: inherit;"> @RemoveHtmlTags(item.MailContent) </a>
+                                                    <a class="mailbox-read-time" href="/Mail/MailDetail/@item.MailId" style="color: inherit;"> @RemoveHtmlTags(item.MailContent) </a>
                                                 }
                                                 else
                                                 {
@@ -113,7 +113,7 @@
                                                         var regex = new Regex("<.*?>");
                                                         return regex.Replace(input, "");
                                                     };
-                                                    <a class="mailbox-read-time" href="/Mail/CreateMail/@item.MailId" style="color: inherit;"> @RemoveHtmlTags(item.MailContent.Substring(0, last))... </a>
+                                                    <a class="mailbox-read-time" href="/Mail/MailDetail/@item.MailId" style="color: inherit;"> @RemoveHtmlTags(item.MailContent.Substring(0, last))... </a>
                                                 }
                                             </td>
                                             <td class="mailbox-read-time font-weight-bold align-middle" width="300px">@item.MailDate.ToString("dddd, dd MMMM yyyy") -  @item.MailTime.ToString("hh\\:mm")</td>
