@@ -30,7 +30,7 @@ public class MailController : Controller
                 CurrentPage = page,
                 ItemsPerPage = pageSize,
             },
-            Mails = _context.Mails.Include(x => x.AppUser).Where(x => x.ToUserEmail == user.Email && !x.IsDraft && !x.IsTrash).Skip((page - 1) * pageSize).Take(pageSize).OrderByDescending(x => x.MailDate).ToList(),
+            Mails = _context.Mails.Include(x => x.AppUser).Where(x => x.ToUserEmail == user.Email && !x.IsDraft && !x.IsTrash).OrderByDescending(x => x.MailDate).Skip((page - 1) * pageSize).Take(pageSize).ToList(),
             TotalMails = _context.Mails.Where(x => x.ToUserEmail == user.Email && !x.IsDraft && !x.IsTrash).Count(),
 
         };
@@ -286,6 +286,26 @@ public class MailController : Controller
         _context.Mails.RemoveRange(trash);
         _context.SaveChanges();
         return RedirectToAction("Trash");
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Junk(int page = 1)
+    {
+        const int pageSize = 10;
+        var user = await _userManager.FindByNameAsync(User.Identity.Name);
+        var model = new MailViewModel
+        {
+            PageInfo = new PageInfoModel()
+            {
+                TotalItems = _context.Mails.Include(x => x.AppUser).Where(x => (x.AppUserID == user.Id || x.ToUserEmail == user.Email) && x.IsJunk && !x.IsDraft && !x.IsTrash && !x.IsImportant).Count(),
+                CurrentPage = page,
+                ItemsPerPage = pageSize,
+            },
+            Mails = _context.Mails.Include(x => x.AppUser).Where(x => (x.AppUserID == user.Id || x.ToUserEmail == user.Email) && x.IsJunk && !x.IsDraft && !x.IsTrash && !x.IsImportant).OrderByDescending(x => x.MailDate).Skip((page - 1) * pageSize).Take(pageSize).ToList(),
+            TotalMails = _context.Mails.Include(x => x.AppUser).Where(x => (x.AppUserID == user.Id || x.ToUserEmail == user.Email) && x.IsJunk && !x.IsDraft && !x.IsTrash && !x.IsImportant).Count(),
+
+        };
+        return View(model);
     }
 }
 

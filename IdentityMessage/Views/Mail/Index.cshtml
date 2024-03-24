@@ -108,7 +108,13 @@
                                                 }
 
                                                 <td class="@(item.IsRead == false ? "" : "mailbox-read-time") align-middle" width="200px"><a href="/Mail/MailDetail/@item.MailId" style="color: inherit;">@item.AppUser.Email</a></td>
+                                               
                                                 <td class="align-middle" width="1500px">
+                                                    @if (item.IsRead == false)
+                                                    {
+                                                        <span class="badge bg-primary float-left mt-1">Yeni</span>
+                                                    }
+                                                    &nbsp;
                                                     <a href="/Mail/MailDetail/@item.MailId" style="color: inherit;"> @item.MailSubject </a> &nbsp;
                                                     - &nbsp;
                                                     @if (item.MailContent is null || item.MailContent.Length < 200)

@@ -9,7 +9,7 @@
         <!-- Sidebar user (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-                <img src="~/AdminLTE-3.2.0/dist/img/AdminLTELogo.png" class="img-circle elevation-2" alt="User Image">
+                <img src="~/AdminLTE-3.2.0/dist/img/mails.jpg" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
                 <a href="/Admin/Dashboard/Index" class="d-block">@Model.Email</a>
@@ -75,10 +75,11 @@
                 </li>
                 <li class="nav-item">
                     <a href="/Mail/Junk" class="nav-link">
-                        <i class="fi fi-sr-file "></i>&ensp;
+                        <i class="fi fi-sr-exclamation"></i>&ensp;
                         <p>
-                            Önemsiz
+                            Spam
                         </p>
+                         <span class="badge bg-info float-right">@ViewBag.Junk</span>
                     </a>
                 </li>
                 <li class="nav-item">
