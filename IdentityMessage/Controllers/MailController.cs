@@ -86,7 +86,6 @@ public class MailController : Controller
         return View(model);
     }
 
-    [HttpPost]
     public async Task<IActionResult> Draft(MailViewModel model)
     {
         var user = await _userManager.FindByNameAsync(User.Identity.Name);
@@ -98,8 +97,8 @@ public class MailController : Controller
             ToUserEmail = model.ToUserEmail,
             MailSubject = model.MailSubject,
             MailContent = model.MailContent,
-            MailDate = model.MailDate,
-            MailTime = model.MailTime,
+            MailDate = DateTime.Now,
+            MailTime = DateTime.Now.TimeOfDay,
             IsDraft = true,
             IsImportant = false,
             IsJunk = false,
@@ -165,6 +164,8 @@ public class MailController : Controller
             _context.Mails.Add(newMail);
             _context.SaveChanges();
 
+
+
             var deleteDraft = _context.Mails.FirstOrDefault(x => x.MailId == model.MailId && x.IsDraft);
             if (deleteDraft != null)
             {
@@ -209,12 +210,12 @@ public class MailController : Controller
         {
             PageInfo = new PageInfoModel()
             {
-                TotalItems = _context.Mails.Include(x => x.AppUser).Where(x => x.IsImportant && !x.IsDraft && !x.IsTrash && !x.IsJunk).Count(),
+                TotalItems = _context.Mails.Include(x => x.AppUser).Where(x => x.AppUserID == user.Id || x.ToUserEmail == user.Email && x.IsImportant && !x.IsDraft && !x.IsTrash && !x.IsJunk).Count(),
                 CurrentPage = page,
                 ItemsPerPage = pageSize,
             },
-            Mails = _context.Mails.Include(x => x.AppUser).Where(x => x.IsImportant && !x.IsDraft && !x.IsTrash && !x.IsJunk).OrderByDescending(x => x.MailDate).Skip((page - 1) * pageSize).Take(pageSize).ToList(),
-            TotalMails = _context.Mails.Include(x => x.AppUser).Where(x => x.IsImportant && !x.IsDraft && !x.IsTrash && !x.IsJunk).Count(),
+            Mails = _context.Mails.Include(x => x.AppUser).Where(x => (x.AppUserID == user.Id || x.ToUserEmail == user.Email) && x.IsImportant && !x.IsDraft && !x.IsTrash && !x.IsJunk).OrderByDescending(x => x.MailDate).Skip((page - 1) * pageSize).Take(pageSize).ToList(),
+            TotalMails = _context.Mails.Include(x => x.AppUser).Where(x => x.AppUserID == user.Id || x.ToUserEmail == user.Email && x.IsImportant && !x.IsDraft && !x.IsTrash && !x.IsJunk).Count(),
 
         };
         return View(model);

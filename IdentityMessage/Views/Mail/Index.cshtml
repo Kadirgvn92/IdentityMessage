@@ -70,7 +70,7 @@
                                 <tbody>
                                     @foreach (var item in Model.Mails)
                                     {
-                                        <tr class="@(item.IsRead == false ? "font-weight-bold" : "")" style="@(item.IsRead == false ? "background-color:darkgray" : "")">
+                                        <tr class="@(item.IsRead == false ? "font-weight-bold" : "")" style="@(item.IsRead == false ? "" : "background-color:aliceblue")">
                                             <td width="50px">
                                                 <div class="icheck-primary">
                                                     <input type="checkbox" value="" id="@item.MailId">
@@ -92,10 +92,10 @@
                                                 </td>
                                             }
 
-                                            <td class="mailbox-read-time align-middle" width="200px"><a href="read-mail.html" style="color: inherit;">@item.AppUser.Email</a></td>
+                                            <td class="@(item.IsRead == false ? "" : "mailbox-read-time") align-middle" width="200px"><a href="/Mail/MailDetail/@item.MailId" style="color: inherit;">@item.AppUser.Email</a></td>
                                             <td class="align-middle" width="1500px">
-                                                <b><a href="/Mail/MailDetail/@item.MailId" style="color: inherit;"> @item.MailSubject </a></b>
-                                                -
+                                                <a href="/Mail/MailDetail/@item.MailId" style="color: inherit;"> @item.MailSubject </a> &nbsp;
+                                                - &nbsp;
                                                 @if (item.MailContent is null || item.MailContent.Length < 200)
                                                 {
                                                     Func<string, string> RemoveHtmlTags = (input) =>
@@ -122,7 +122,7 @@
                                                     <a class="mailbox-read-time" href="/Mail/MailDetail/@item.MailId" style="color: inherit;"> @RemoveHtmlTags(item.MailContent.Substring(0, last))... </a>
                                                 }
                                             </td>
-                                            <td class="mailbox-read-time font-weight-bold align-middle" width="300px">@item.MailDate.ToString("dddd, dd MMMM yyyy") -  @item.MailTime.ToString("hh\\:mm")</td>
+                                            <td class="@(item.IsRead == false ? "" : "mailbox-read-time") font-weight-bold align-middle" width="300px">@item.MailDate.ToString("dddd, dd MMMM yyyy") -  @item.MailTime.ToString("hh\\:mm")</td>
                                         </tr>
                                     }
 

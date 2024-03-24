@@ -29,7 +29,7 @@ public class _AdminSidebarPartial : ViewComponent
 
             ViewBag.Send = _context.Mails.Include(x => x.AppUser).Where(x => x.AppUser.Email == values.Email && !x.IsTrash && !x.IsDraft).Count();
 
-            ViewBag.Important = _context.Mails.Include(x => x.AppUser).Where(x => x.IsImportant && !x.IsDraft && !x.IsTrash && !x.IsJunk).Count();
+            ViewBag.Important = _context.Mails.Include(x => x.AppUser).Where(x => (x.AppUserID == values.Id || x.ToUserEmail == values.Email) && x.IsImportant && !x.IsDraft && !x.IsTrash && !x.IsJunk).Count();
 
             return View(values);
         }
