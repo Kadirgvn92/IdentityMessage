@@ -21,7 +21,7 @@
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <li class="nav-item">
                     <a href="/Mail/CreateMail/" class="nav-link">
-                        <i class="fi fi-sr-apps text-dark"></i> &ensp;
+                        <i class="fi fi-sr-apps "></i> &ensp;
                         <p>
                            Yeni Mail
                         </p>
@@ -29,48 +29,60 @@
                 </li>
                 <li class="nav-item">
                     <a href="/Mail/Index" class="nav-link">
-                        <i class="fi fi-sr-envelope text-primary"></i> &ensp;
+                        <i class="fi fi-sr-envelope "></i> &ensp;
                         <p>
                             Gelen Kutusu
                         </p>
+                        <span class="badge bg-primary float-right">@ViewBag.Index</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="/Mail/Send" class="nav-link">
-                        <i class="fi fi-sr-paper-plane text-success"></i>&ensp;
+                        <i class="fi fi-sr-paper-plane "></i>&ensp;
                         <p>
                             Giden Kutusu
                         </p>
+                         <span class="badge bg-success float-right">@ViewBag.Send</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="/Mail/DraftList" class="nav-link">
-                        <i class="fi fi-sr-envelope text-danger"></i>&ensp;
+                        <i class="fi fi-sr-envelope y"></i>&ensp;
                         <p>
                             Taslaklar
+                        </p>
+                         <span class="badge bg-secondary float-right">@ViewBag.DrafList</span>
+                    </a>
+                </li>
+                
+                 <li class="nav-item">
+                    <a href="/Mail/Important" class="nav-link">
+                        <i class="fi fi-sr-star "></i>&ensp;
+                        <p>
+                            Önemli
+                        </p>
+                        <span class="badge bg-warning float-right">@ViewBag.Important</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/Mail/Trash" class="nav-link">
+                        <i class="fi fi-sr-trash "></i>&ensp;
+                        <p>
+                            Çöp Kutusu
                         </p>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="/Mail/Junk" class="nav-link">
-                        <i class="fi fi-sr-file text-info"></i>&ensp;
+                        <i class="fi fi-sr-file "></i>&ensp;
                         <p>
                             Önemsiz
                         </p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/Mail/Trash" class="nav-link">
-                        <i class="fi fi-sr-trash text-warning"></i>&ensp;
-                        <p>
-                            Çöp Kutusu
-                        </p>
-                    </a>
-                </li>
-                
-                <li class="nav-item">
                     <a href="/Login/LogOut" class="nav-link">
-                        <i class="fi fi-sr-sign-out-alt text-danger"></i>&ensp;
+                        <i class="fi fi-sr-leave text-danger"></i>&ensp;
                         <p>
                             Çıkış
                         </p>

@@ -31,7 +31,7 @@ public class MailController : Controller
                 ItemsPerPage = pageSize,
             },
             Mails = _context.Mails.Include(x => x.AppUser).Where(x => x.ToUserEmail == user.Email && !x.IsDraft && !x.IsTrash).Skip((page - 1) * pageSize).Take(pageSize).OrderByDescending(x => x.MailDate).ToList(),
-            TotalMails = _context.Mails.Where(x => x.ToUserEmail == user.Email && !x.IsTrash).Count(),
+            TotalMails = _context.Mails.Where(x => x.ToUserEmail == user.Email && !x.IsDraft && !x.IsTrash).Count(),
 
         };
         return View(model);
@@ -80,7 +80,7 @@ public class MailController : Controller
                 ItemsPerPage = pageSize,
             },
             Mails = _context.Mails.Include(x => x.AppUser).Where(x => x.AppUser.Email == user.Email && x.IsDraft && !x.IsTrash).OrderByDescending(x => x.MailDate).Skip((page - 1) * pageSize).Take(pageSize).ToList(),
-            TotalMails = _context.Mails.Include(x => x.AppUser).Where(x => x.AppUser.Email == user.Email && !x.IsTrash).Count(),
+            TotalMails = _context.Mails.Include(x => x.AppUser).Where(x => x.AppUser.Email == user.Email && x.IsDraft && !x.IsTrash).Count(),
 
         };
         return View(model);
@@ -98,12 +98,12 @@ public class MailController : Controller
             ToUserEmail = model.ToUserEmail,
             MailSubject = model.MailSubject,
             MailContent = model.MailContent,
-            MailDate = DateTime.Now,
-            MailTime = DateTime.Now.TimeOfDay,
+            MailDate = model.MailDate,
+            MailTime = model.MailTime,
             IsDraft = true,
             IsImportant = false,
             IsJunk = false,
-            IsRead = false,
+            IsRead = true,
             IsTrash = false,
         };
 
@@ -130,6 +130,7 @@ public class MailController : Controller
                 MailSubject = draft.MailSubject,
                 ToUserEmail = draft.ToUserEmail,
             };
+            _context.SaveChanges();
             return View(draftMail);
         }
         return View();
@@ -189,16 +190,55 @@ public class MailController : Controller
         {
             PageInfo = new PageInfoModel()
             {
-                TotalItems = _context.Mails.Include(x => x.AppUser).Where(x => x.AppUser.Email == user.Email).Count(),
+                TotalItems = _context.Mails.Include(x => x.AppUser).Where(x => x.AppUser.Email == user.Email && !x.IsTrash && !x.IsDraft).Count(),
                 CurrentPage = page,
                 ItemsPerPage = pageSize,
             },
             Mails = _context.Mails.Include(x => x.AppUser).Where(x => x.AppUser.Email == user.Email && !x.IsTrash && !x.IsDraft).OrderByDescending(x => x.MailDate).Skip((page - 1) * pageSize).Take(pageSize).ToList(),
-            TotalMails = _context.Mails.Include(x => x.AppUser).Where(x => x.AppUser.Email == user.Email && !x.IsTrash).Count(),
+            TotalMails = _context.Mails.Include(x => x.AppUser).Where(x => x.AppUser.Email == user.Email && !x.IsTrash && !x.IsDraft).Count(),
 
         };
         return View(model);
     }
-    
+    [HttpGet]
+    public async Task<IActionResult> Important(int page = 1)
+    {
+        const int pageSize = 10;
+        var user = await _userManager.FindByNameAsync(User.Identity.Name);
+        var model = new MailViewModel
+        {
+            PageInfo = new PageInfoModel()
+            {
+                TotalItems = _context.Mails.Include(x => x.AppUser).Where(x => x.IsImportant && !x.IsDraft && !x.IsTrash && !x.IsJunk).Count(),
+                CurrentPage = page,
+                ItemsPerPage = pageSize,
+            },
+            Mails = _context.Mails.Include(x => x.AppUser).Where(x => x.IsImportant && !x.IsDraft && !x.IsTrash && !x.IsJunk).OrderByDescending(x => x.MailDate).Skip((page - 1) * pageSize).Take(pageSize).ToList(),
+            TotalMails = _context.Mails.Include(x => x.AppUser).Where(x => x.IsImportant && !x.IsDraft && !x.IsTrash && !x.IsJunk).Count(),
+
+        };
+        return View(model);
+    }
+    public async Task<IActionResult> MakeImportant(int id)
+    {
+        var user = await _userManager.FindByNameAsync(User.Identity.Name);
+        var important = _context.Mails.Find(id);
+
+        if (important.IsImportant)
+        {
+            important.IsImportant = false;
+        }
+        else
+        {
+            important.IsImportant = true;
+        }
+
+        _context.Mails.Update(important);
+        _context.SaveChanges();
+        return RedirectToAction("Index");
+
+    }
+
+
 }
 
