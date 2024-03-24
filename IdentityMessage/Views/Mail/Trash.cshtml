@@ -47,20 +47,22 @@
                     else
                     {
                         <div class="card-body p-0">
-                            <div class="mailbox-controls">
+                            <div class="mailbox-controls d-flex justify-content-between">
                                 <!-- /.btn-group -->
                                 <div class="icheck-primary float-left ml-3 mr-1" width="50px">
                                     <input type="checkbox" value="" id="checkall">
                                     <label for="checkall"></label>
                                 </div>
-                                <button type="button" class="btn btn-default btn-sm bg-danger ml-3">
-                                    Kalıcı Olarak Sil
-                                </button>
-
+                                <div class="text-center">
+                                    <a href="/Mail/DeleteAllMail" class="btn btn-default btn-sm bg-danger ml-3">
+                                        Çöp Kutusunu Boşalt
+                                    </a>
+                                    &nbsp; &nbsp;
+                                    <span class="mailbox-read-time">Çöp Kutusu'ndaki iletiler 30 günün sonunda otomatik olarak silinir. </span>
+                                </div>
+                               
                                 <!-- /.btn-group -->
-                                <button type="button" class="btn btn-default btn-sm bg-secondary">
-                                    <i class="fas fa-sync-alt"></i>
-                                </button>
+
                                 <div class="float-right">
                                     @Model.PageInfo.CurrentPage - @Model.PageInfo.ItemsPerPage / @Model.PageInfo.TotalPages()
                                     <div class="btn-group">
@@ -82,15 +84,15 @@
                                     <tbody>
                                         @foreach (var item in Model.Mails)
                                         {
-                                            <tr class="@(item.IsRead == false ? "font-weight-bold" : "")" style="@(item.IsRead == false ? "" : "background-color:aliceblue")">
+                                            <tr style="background-color:aliceblue">
                                                 <td width="50px">
                                                     <div class="icheck-primary">
                                                         <input type="checkbox" value="" id="@item.MailId">
                                                         <label for="@item.MailId"></label>
                                                     </div>
                                                 </td>
-                                                
-                                                <td class="@(item.IsRead == false ? "" : "mailbox-read-time") align-middle" width="200px">
+
+                                                <td class="mailbox-read-time align-middle" width="200px">
                                                     <a href="/Mail/MailDetail/@item.MailId" style="color: inherit;"> <span class=""><i class="fa fa-trash text-danger"></i></span> &nbsp;@item.AppUser.Email</a>
                                                 </td>
                                                 <td class="align-middle" width="1500px">
@@ -122,7 +124,8 @@
                                                         <a class="mailbox-read-time" href="/Mail/MailDetail/@item.MailId" style="color: inherit;"> @RemoveHtmlTags(item.MailContent.Substring(0, last))... </a>
                                                     }
                                                 </td>
-                                                <td class="@(item.IsRead == false ? "" : "mailbox-read-time") font-weight-bold align-middle" width="300px">@item.MailDate.ToString("dddd, dd MMMM yyyy") -  @item.MailTime.ToString("hh\\:mm")</td>
+                                                <td class="mailbox-read-time font-weight-bold align-middle" width="300px">@item.MailDate.ToString("dddd, dd MMMM yyyy") -  @item.MailTime.ToString("hh\\:mm")</td>
+                                                <td class="align-middle" width="200px"><a class="btn btn-danger btn-sm" href="/Mail/DeleteMail/@item.MailId?redirectAction=Trash">Kalıcı Olarak Sil</a></td>
                                             </tr>
                                         }
 

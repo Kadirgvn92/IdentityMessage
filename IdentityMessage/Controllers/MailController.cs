@@ -278,5 +278,14 @@ public class MailController : Controller
         _context.SaveChanges();
         return RedirectToAction("Trash");
     }
+    public async Task<IActionResult> DeleteAllMail()
+    {
+        var user = await _userManager.FindByNameAsync(User.Identity.Name);
+        var trash = _context.Mails.Include(x => x.AppUser).Where(x => (x.AppUserID == user.Id || x.ToUserEmail == user.Email) && x.IsTrash).ToList();
+
+        _context.Mails.RemoveRange(trash);
+        _context.SaveChanges();
+        return RedirectToAction("Trash");
+    }
 }
 
