@@ -90,10 +90,18 @@ public class LoginController : Controller
             return View();
         }
     }
-    [HttpGet]
-    public async Task<IActionResult> LogOut()
+
+    public async Task LogOut() //Bu metotta program.cs'te cookie içerisine belirlenen url üzerinden hangi sayfada nereye çıkış yapabileceğimizi seçebileceğiz
     {
         await _signInManager.SignOutAsync();
-        return RedirectToAction("SignIn", "Login");
     }
+
+    //altta gösterilen sigout belirlenen adrese çıkış yapar 
+
+    //[HttpGet]
+    //public async Task<IActionResult> LogOut()
+    //{
+    //    await _signInManager.SignOutAsync();
+    //    return RedirectToAction("SignIn", "Login");
+    //}
 }

@@ -44,10 +44,23 @@ builder.Services.AddMvc(config =>
     config.Filters.Add(new AuthorizeFilter(policy));
 });
 
-//burada yetkisiz kiþinin nereye yönlendireceðini belirledik.
+
 builder.Services.ConfigureApplicationCookie(opt =>
 {
-    opt.LoginPath = "/Login/SignIn/";
+    opt.LoginPath = "/Login/SignIn/"; //burada yetkisiz kiþinin nereye yönlendireceðini belirledik.
+    opt.LogoutPath = "/Login/LogOut"; //burada biz hangi metotla çýkýþ yapýlacaðýný belirledik.
+
+    var cookieBuilder = new CookieBuilder(); //Cookie ayarlarý için bir builder türettik.
+    cookieBuilder.Name = "IdentityMailCookie"; //Cookie ismini belirledik.
+
+    opt.Cookie = cookieBuilder; //Cookiemizin tanýmladýðýmýz cookieBuildera tanýmladýk.
+    opt.ExpireTimeSpan = TimeSpan.FromDays(60); //cookiemizin yaþam süresini belirledik 60 gün olarak.
+    opt.SlidingExpiration = true; //cookimizn her giriþinde yaþam süresi uzatýlsýn mý diye soruyoruz. biz evet dedik
+    //yukarýdaki expritetime mantýðý : Kullanýcý giriþ yaptý ve 60 gün boyunca cookie saklandý Okey. ancak 60 gün sonunda 
+    //bize tekrar þifre soracak sliding olayý ise bu 60 günlük zaman zarfýnda girerse sayacý 0 dan baþlatýyor 
+    //örneðin kullanýcý 30. günde giriþ yaptý artýk 60 tekrar baþtan baþladý yani kullanýcý 30 + 60 = 90 gün þifresiz girebilir.
+
+
 });
 
 var app = builder.Build();
