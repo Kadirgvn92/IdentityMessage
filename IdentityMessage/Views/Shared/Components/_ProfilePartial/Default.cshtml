@@ -1,0 +1,39 @@
+﻿
+@model UserProfileViewModel
+
+<div class="widget-user-header bg-danger">
+    <h3 class="widget-user-username">@Model.Name @Model.Surname</h3>
+    <h5 class="widget-user-desc">@Model.Email</h5>
+</div>
+<div class="widget-user-image">
+    <img class="img-circle elevation-2" src="~/AdminLTE-3.2.0/dist/img/profile.jpg" alt="User Avatar">
+</div>
+<div class="card-footer">
+    <div class="row">
+        <div class="col-sm-4 border-right">
+            <div class="description-block">
+                <h3 class="">@Model.UnRead</h3>
+                <span class="description-text">Okunmamış Mail</span>
+            </div>
+            <!-- /.description-block -->
+        </div>
+        <!-- /.col -->
+        <div class="col-sm-4 border-right">
+            <div class="description-block">
+                <h3 class="">@Model.Send</h3>
+                <span class="description-text">Gönderilen Mail</span>
+            </div>
+            <!-- /.description-block -->
+        </div>
+        <!-- /.col -->
+        <div class="col-sm-4">
+            <div class="description-block">
+                <h3 class="">@Model.Inbox</h3>
+                <span class="description-text">Gelen Mail</span>
+            </div>
+            <!-- /.description-block -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</div>
