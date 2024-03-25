@@ -20,11 +20,12 @@
 
             @RenderBody()
 
+            @await Component.InvokeAsync("_AdminFooterPartial")
         </div>
        
     </div>
 
-    @await Component.InvokeAsync("_AdminFooterPartial")
+    
 
     @await Component.InvokeAsync("_AdminScriptPartial")
 
