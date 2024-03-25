@@ -95,6 +95,33 @@ public class LoginController : Controller
     {
         await _signInManager.SignOutAsync();
     }
+    [HttpGet]
+    public IActionResult ForgetPassword()
+    {
+        return View();  
+    }
+    [HttpPost]
+    public async Task<IActionResult> ForgetPassword(ForgetPasswordViewModel model)
+    {
+        var hasUser = await _userManager.FindByEmailAsync(model.Email);
+        if (hasUser == null)
+        {
+            ModelState.AddModelError(string.Empty, "Email adresine sahip kullanıcı bulunamamıştır.");
+            return View();
+
+        }
+        string passwordResetToken = await _userManager.GeneratePasswordResetTokenAsync(hasUser);
+
+        var passwordResetLink = Url.Action("ResetPassword","Login", new { userId = hasUser.Id , Token = passwordResetToken });
+
+        TempData["ResetSuccess"] = "Email adresine sahip kullanıcı bulunamamıştır.";
+
+        return RedirectToAction("ForgetPassword");
+    }
+
+
+
+
 
     //altta gösterilen sigout belirlenen adrese çıkış yapar 
 
