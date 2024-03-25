@@ -1,4 +1,4 @@
-﻿@model PasswordChangeViewModel
+﻿@model ProfileViewModel
 
 @{
     ViewData["Title"] = "Index";
@@ -37,24 +37,62 @@
                     <div class="card">
                         <div class="card-header p-2">
                             <ul class="nav nav-pills">
-                                <li class="nav-item"><a class="nav-link" href="#passwordChange" data-toggle="tab">Şifre Değiştir</a></li>
+                                <li class="nav-item"><a class="active nav-link" href="#profile" data-toggle="tab">Profil Ayarları</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#passwordChange" data-toggle="tab">Şifre Ayarları</a></li>
                             </ul>
                         </div><!-- /.card-header -->
                         <div class="card-body">
                             <div class="tab-content">
-                                <div class="active tab-pane" id="passwordChange">
+                                <div class="active tab-pane" id="profile">
                                     <form method="post" role="form text-left">
                                         <div class="mb-3">
-                                            <input type="password" asp-for="OldPassword" class="form-control mb-2" placeholder="Eski Şifre" aria-label="Eski Şifre">
+                                            <input type="text" asp-for="UserEditViewModel.Username" class="form-control mb-2" placeholder="Kullanıcı Adı" aria-label="Name">
+                                            <span asp-validation-for="UserEditViewModel.Username" class="text-danger"> </span>
                                         </div>
                                         <div class="mb-3">
-                                            <input type="password" asp-for="NewPassword" class="form-control mb-2" placeholder="Yeni Şifre" aria-label="Yeni Şifre">
+                                            <input type="email" asp-for="UserEditViewModel.Email" class="form-control mb-2" placeholder="Mail Adresi" aria-label="Surname">
+                                            <span asp-validation-for="UserEditViewModel.Email" class="text-danger"> </span>
+                                        </div>
+                                        <div class="mb-3">
+                                            <input type="date" asp-for="UserEditViewModel.BirthDate" class="form-control mb-2" placeholder="Doğum Tarihi" aria-label="Username">
+                                            <span asp-validation-for="UserEditViewModel.BirthDate" class="text-danger"> </span>
+                                        </div>
+                                        <div class="mb-3">
+                                            <input type="text" asp-for="UserEditViewModel.City" class="form-control mb-2" placeholder="Email" aria-label="Email">
+                                            <span asp-validation-for="UserEditViewModel.City" class="text-danger"> </span>
+                                        </div>
+                                        <div class="mb-3">
+                                            <select type="text" asp-for="UserEditViewModel.Gender" asp-items="ViewBag.Gender" class="form-control mb-2" placeholder="Cinsiyet"></select>
+                                            <span asp-validation-for="UserEditViewModel.Gender" class="text-danger"> </span>
+                                        </div>
+                                        <div class="text-dark bg-danger" asp-validation-summary="ModelOnly"> </div>
+                                        @if (TempData["MessageSuccess"] != null)
+                                        {
+                                            <div class="alert alert-success font-weight-bold mt-3 text-xs">
+                                                @TempData["MessageSuccess"]
+                                            </div>
+                                        }
+                                       
+                                        <div class="text-center">
+                                            <button type="submit" class="btn bg-gradient-primary my-4 mb-2">Profil Güncelle</button>
+                                        </div>
+
+                                    </form>
+                                </div>
+
+                                <div class="tab-pane" id="passwordChange">
+                                    <form method="post" role="form text-left">
+                                        <div class="mb-3">
+                                            <input type="password" asp-for="PasswordChangeViewModel.OldPassword" class="form-control mb-2" placeholder="Eski Şifre" aria-label="Eski Şifre">
+                                        </div>
+                                        <div class="mb-3">
+                                            <input type="password" asp-for="PasswordChangeViewModel.NewPassword" class="form-control mb-2" placeholder="Yeni Şifre" aria-label="Yeni Şifre">
                                         </div>
 
                                         <div class="mb-3">
-                                            <input type="password" asp-for="NewPasswordConfirm" class="form-control mb-2" placeholder="Yeni Şifre Tekrar" aria-label="Yeni şifre tekrar">
-                                            <span asp-validation-for="NewPassword" class="text-danger"> </span>
-                                            <span asp-validation-for="NewPasswordConfirm" class="text-danger"> </span>
+                                            <input type="password" asp-for="PasswordChangeViewModel.NewPasswordConfirm" class="form-control mb-2" placeholder="Yeni Şifre Tekrar" aria-label="Yeni şifre tekrar">
+                                            <span asp-validation-for="PasswordChangeViewModel.NewPassword" class="text-danger"> </span>
+                                            <span asp-validation-for="PasswordChangeViewModel.NewPasswordConfirm" class="text-danger"> </span>
                                         </div>
                                         <div class="text-dark bg-danger" asp-validation-summary="ModelOnly"> </div>
                                         @if (TempData["PasswordChange"] != null)
@@ -69,7 +107,6 @@
                                         </div>
                                     </form>
                                 </div>
-
                             </div>
                         </div>
                     </div>
