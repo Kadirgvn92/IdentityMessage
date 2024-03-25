@@ -54,7 +54,7 @@ public class LoginController : Controller
 
         }
         return View();
-      
+
     }
     [HttpGet]
     public IActionResult SignIn()
@@ -66,16 +66,23 @@ public class LoginController : Controller
     {
         if (ModelState.IsValid)
         {
-            var result = await _signInManager.PasswordSignInAsync(p.Username, p.Password, false, true);
+            var result = await _signInManager.PasswordSignInAsync(p.Username, p.Password, p.RememberMe, true);
+
             if (result.Succeeded)
             {
                 return RedirectToAction("Index", "Mail");
-            }
-            else
+            } 
+
+            if (result.IsLockedOut) //giriş denemeleri için yanlış giriş teşebbüslerinde verilecek reaksiyonları yazabiliriz
             {
-                ViewBag.ErrorMessage = "Geçersiz Kullanıcı adı veya Şifre. Lütfen tekrar deneyiniz.";
+                ViewBag.ErrorMessage = "Çok fazla yanlış deneme yaptınız.\n 3 dakika boyunca giriş yapamazsınız.";
                 return View();
             }
+            var user = await _userManager.FindByNameAsync(p.Username);
+            //Buradada kaç tane yanlış denemesi olduğunu gösteriyoruz.
+            ViewBag.ErrorMessage = $"Geçersiz Kullanıcı adı veya Şifre. Lütfen tekrar deneyiniz.\n Başarısız Giriş Denemesi = {await _userManager.GetAccessFailedCountAsync(user)}";
+            return View();
+
         }
         else
         {

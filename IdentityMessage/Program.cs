@@ -19,15 +19,23 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 });
 
 //Identity için aþaðýdaki þekilde tanýmlamalarýmýzý yaptýk
-builder.Services.AddIdentity<AppUser,AppRole>().AddEntityFrameworkStores<AppDbContext>();
+builder.Services.AddIdentity<AppUser,AppRole>(opt =>
+{
+    opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(3); // default olarak 5 dakika kitlenir burada biz kitli kalma süresini deðiþtirdik
+    opt.Lockout.MaxFailedAccessAttempts = 3; //baþarýsýz olarak girilme teþebbüs sayýsý 3 yaptýk 
 
+}).AddEntityFrameworkStores<AppDbContext>();
+
+//fluentvalidationda default olarak gelen hata mesajlarýný disable yaptýk
 builder.Services.AddFluentValidationAutoValidation(config =>
 {
     config.DisableDataAnnotationsValidation = true;
 });
 
+//burada bir validator verdik örnek olarak assembly bu örneðe göre fluentvalidation tanýmlamasý yapýyor
 builder.Services.AddValidatorsFromAssemblyContaining<LoginValidator>();
 
+//burada yetkilendirilmiþ kullanýcý girmesi hakkýnda tanýmlama yaptýk
 builder.Services.AddMvc(config =>
 {
     var policy = new AuthorizationPolicyBuilder()
@@ -36,6 +44,7 @@ builder.Services.AddMvc(config =>
     config.Filters.Add(new AuthorizeFilter(policy));
 });
 
+//burada yetkisiz kiþinin nereye yönlendireceðini belirledik.
 builder.Services.ConfigureApplicationCookie(opt =>
 {
     opt.LoginPath = "/Login/SignIn/";
