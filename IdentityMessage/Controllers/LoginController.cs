@@ -4,6 +4,7 @@ using IdentityMessage.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Security.Principal;
 
 namespace IdentityMessage.Controllers;
@@ -125,5 +126,43 @@ public class LoginController : Controller
 
 
         return RedirectToAction("ForgetPassword");
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> ResetPassword(string userId,string token)
+    {
+        TempData["userId"] = userId;
+        TempData["token"] = token;
+
+       
+        return View();  
+    }
+    [HttpPost]
+    public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+    {
+        var userId = TempData["userId"].ToString();
+        var token = TempData["token"].ToString();
+
+        var hasUser = await _userManager.FindByIdAsync(userId);
+        if (hasUser == null)
+        {
+            ModelState.AddModelError(string.Empty, "Kullanıcı bulunamamıştır.");
+            return View();
+        }
+
+        var result = await _userManager.ResetPasswordAsync(hasUser, token, model.Password);
+
+        if(result.Succeeded)
+        {
+            TempData["Reset"] = "Şifreniz yenilenmiştir.";
+        }
+        else
+        {
+            foreach (IdentityError item in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, item.Description);
+            }
+        }
+        return View();
     }
 }
