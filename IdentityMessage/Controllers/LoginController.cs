@@ -1,4 +1,5 @@
 ﻿using IdentityMessage.Models;
+using IdentityMessage.Services;
 using IdentityMessage.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -11,11 +12,13 @@ public class LoginController : Controller
 {
     private readonly UserManager<AppUser> _userManager;
     private readonly SignInManager<AppUser> _signInManager;
+    private readonly IEmailService _emailService;
 
-    public LoginController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
+    public LoginController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IEmailService emailService)
     {
         _userManager = userManager;
         _signInManager = signInManager;
+        _emailService = emailService;
     }
 
     public IActionResult Index()
@@ -112,23 +115,15 @@ public class LoginController : Controller
         }
         string passwordResetToken = await _userManager.GeneratePasswordResetTokenAsync(hasUser);
 
-        var passwordResetLink = Url.Action("ResetPassword","Login", new { userId = hasUser.Id , Token = passwordResetToken });
+        var passwordResetLink = Url.Action("ResetPassword","Login", new { userId = hasUser.Id , Token = passwordResetToken }, HttpContext.Request.Scheme);
 
-        TempData["ResetSuccess"] = "Email adresine sahip kullanıcı bulunamamıştır.";
+        //Email Service
+        await _emailService.SendResetEmail(passwordResetLink, hasUser.Email);
+
+
+        TempData["ResetSuccess"] = "Şifre sıfırlama linki mail adresinize gönderilmiştir.";
+
 
         return RedirectToAction("ForgetPassword");
     }
-
-
-
-
-
-    //altta gösterilen sigout belirlenen adrese çıkış yapar 
-
-    //[HttpGet]
-    //public async Task<IActionResult> LogOut()
-    //{
-    //    await _signInManager.SignOutAsync();
-    //    return RedirectToAction("SignIn", "Login");
-    //}
 }

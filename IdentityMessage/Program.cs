@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using IdentityMessage.Validations;
 using Microsoft.AspNetCore.Identity;
 using IdentityMessage.Extensions;
+using IdentityMessage.ViewModels;
+using IdentityMessage.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +26,9 @@ builder.Services.ValidationExtension(); //FluentValidation ile ilgili extensions
 
 builder.Services.AddIdentityExtensitions(); //Idenitty ile ilgili extensions
 
+
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));//Mailservice tanýmlamasý
+builder.Services.AddScoped<IEmailService, EmailService>(); //Addscoped ile  service tanýmlamalarýmýzý yaptýk
 
 var app = builder.Build();
 
