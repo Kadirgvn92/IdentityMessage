@@ -26,7 +26,7 @@ public class MailController : Controller
         {
             PageInfo = new PageInfoModel()
             {
-                TotalItems = _context.Mails.Where(x => x.ToUserEmail == user.Email && !x.IsTrash && !x.IsJunk).Count(),
+                TotalItems = _context.Mails.Where(x => x.ToUserEmail == user.Email && !x.IsDraft && !x.IsTrash && !x.IsJunk).Count(),
                 CurrentPage = page,
                 ItemsPerPage = pageSize,
             },

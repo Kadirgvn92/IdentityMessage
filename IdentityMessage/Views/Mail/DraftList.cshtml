@@ -100,8 +100,16 @@
                                                             if (string.IsNullOrEmpty(input))
                                                                 return input;
 
-                                                            var regex = new Regex("<.*?>");
-                                                            return regex.Replace(input, "");
+                                                            var htmlTagsRegex = new Regex("<.*?>");
+                                                            // Karakter varlıklarını (character entities) kaldırmak için regex deseni
+                                                            var characterEntitiesRegex = new Regex("&.*?;");
+
+                                                            // HTML etiketlerini kaldır
+                                                            input = htmlTagsRegex.Replace(input, "");
+                                                            // Karakter varlıklarını kaldır
+                                                            input = characterEntitiesRegex.Replace(input, "");
+
+                                                            return input;
                                                         };
                                                         <a class="mailbox-read-time" href="/Mail/CreateMail/@item.MailId" style="color: inherit;"> @RemoveHtmlTags(item.MailContent) </a>
                                                     }
@@ -113,8 +121,16 @@
                                                             if (string.IsNullOrEmpty(input))
                                                                 return input;
 
-                                                            var regex = new Regex("<.*?>");
-                                                            return regex.Replace(input, "");
+                                                            var htmlTagsRegex = new Regex("<.*?>");
+                                                            // Karakter varlıklarını (character entities) kaldırmak için regex deseni
+                                                            var characterEntitiesRegex = new Regex("&.*?;");
+
+                                                            // HTML etiketlerini kaldır
+                                                            input = htmlTagsRegex.Replace(input, "");
+                                                            // Karakter varlıklarını kaldır
+                                                            input = characterEntitiesRegex.Replace(input, "");
+
+                                                            return input;
                                                         };
                                                         <a class="mailbox-read-time" href="/Mail/CreateMail/@item.MailId" style="color: inherit;"> @RemoveHtmlTags(item.MailContent.Substring(0, last))... </a>
                                                     }

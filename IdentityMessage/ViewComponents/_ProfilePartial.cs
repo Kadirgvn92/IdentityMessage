@@ -29,7 +29,7 @@ public class _ProfilePartial : ViewComponent
             Email = user.Email,
             Inbox = _context.Mails.Include(x => x.AppUser).Where(x => x.ToUserEmail == user.Email && !x.IsDraft && !x.IsTrash && !x.IsJunk).Count(),
             Send = _context.Mails.Include(x => x.AppUser).Where(x => x.AppUser.Email == user.Email && !x.IsTrash && !x.IsDraft).Count(),
-            UnRead = _context.Mails.Include(x => x.AppUser).Where(x => x.ToUserEmail == user.Email && !x.IsRead).Count()
+            UnRead = _context.Mails.Include(x => x.AppUser).Where(x => x.ToUserEmail == user.Email && !x.IsRead && !x.IsDraft).Count()
         };
 
         return View(model);

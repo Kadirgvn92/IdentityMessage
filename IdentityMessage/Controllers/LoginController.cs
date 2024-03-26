@@ -181,6 +181,15 @@ public class LoginController : Controller
         return new ChallengeResult("Google", properties);
     }
 
+    public IActionResult SignInFacebook(string ReturnUrl)
+    {
+        string RedirectUrl = Url.Action("ExternalResponse", "Login", new { ReturnUrl = ReturnUrl });
+
+        var properties = _signInManager.ConfigureExternalAuthenticationProperties("Facebook", RedirectUrl);
+
+        return new ChallengeResult("Facebook", properties);
+    }
+
     public async Task<IActionResult> ExternalResponse(string ReturnUrl = "/")
     {
         ExternalLoginInfo info = await _signInManager.GetExternalLoginInfoAsync();
@@ -201,6 +210,7 @@ public class LoginController : Controller
                 AppUser user = new AppUser();
                 user.Email = info.Principal.FindFirst(ClaimTypes.Email).Value;
                 string ExternalUserId = info.Principal.FindFirst(ClaimTypes.NameIdentifier).Value;
+                
 
                 if (info.Principal.HasClaim(x => x.Type == ClaimTypes.Name))
                 {

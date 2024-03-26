@@ -66,6 +66,12 @@ public static class IdentityExtensions
             opt.ClientSecret = configuration["Authentication:Google:ClientSecret"];
         });
 
+        services.AddAuthentication().AddFacebook(opt =>
+        {
+            opt.AppId = configuration["Authentication:Facebook:AppID"];
+            opt.AppSecret = configuration["Authentication:Facebook:AppSecret"];
+        });
+
 
     }
 }
