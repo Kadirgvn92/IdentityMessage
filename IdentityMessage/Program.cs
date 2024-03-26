@@ -24,7 +24,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.ValidationExtension(); //FluentValidation ile ilgili extensions
 
-builder.Services.AddIdentityExtensitions(); //Idenitty ile ilgili extensions
+builder.Services.AddIdentityExtensitions(builder.Configuration); //Idenitty ile ilgili extensions
 
 //security stamp deðerini 30 dakikada bir kontrol edip biz eðer user ve password deðiþtirirsek geçerli 
 //security stamp deðerini almak amacýyla bu ayarý yapýyoruz.

@@ -1,13 +1,16 @@
-﻿using IdentityMessage.Models;
+﻿
+using IdentityMessage.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using System.Configuration;
 
 namespace IdentityMessage.Extensions;
 
 public static class IdentityExtensions
 {
-    public static void AddIdentityExtensitions(this IServiceCollection services)
+    public static void AddIdentityExtensitions(this IServiceCollection services, IConfiguration configuration)
     {
 
         //burada yetkilendirilmiş kullanıcı girmesi hakkında tanımlama yaptık
@@ -42,7 +45,6 @@ public static class IdentityExtensions
         services.ConfigureApplicationCookie(opt =>
         {
             opt.LoginPath = "/Login/SignIn/"; //burada yetkisiz kişinin nereye yönlendireceğini belirledik.
-            opt.LogoutPath = "/Login/LogOut"; //burada biz hangi metotla çıkış yapılacağını belirledik. Ve Nereden çıkış yapacaksak o satıra asp-route-returnurl datası giriyoruz.
 
             var cookieBuilder = new CookieBuilder(); //Cookie ayarları için bir builder türettik.
             cookieBuilder.Name = "IdentityMailCookie"; //Cookie ismini belirledik.
@@ -55,6 +57,16 @@ public static class IdentityExtensions
                                           //örneğin kullanıcı 30. günde giriş yaptı artık 60 tekrar baştan başladı yani kullanıcı 30 + 60 = 90 gün şifresiz girebilir.
 
 
+        }).AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme);
+
+
+        services.AddAuthentication().AddGoogle(opt =>
+        {
+            opt.ClientId = configuration["Authentication:Google:ClientID"] ;
+            opt.ClientSecret = configuration["Authentication:Google:ClientSecret"];
         });
+
+
     }
 }
+
