@@ -52,3 +52,34 @@ Aşağıda, projenin bazı ekran görüntüleri bulunmaktadır:
 --- 
 
 Bu dokümantasyon, Identity projesinin kullanılan teknolojilerini, işlevselliğini ve kurulumunu açıklar. Projeye daha fazla detay eklemek veya özelleştirmek isterseniz, gerektiği gibi düzenleyebilirsiniz.
+
+
+<img src="https://github.com/Kadirgvn92/IdentityMessage/blob/master/1.png" alt="alt text">
+<br/>
+<img src="https://github.com/Kadirgvn92/IdentityMessage/blob/master/2.png" alt="alt text">
+<br/>
+<img src="https://github.com/Kadirgvn92/IdentityMessage/blob/master/3.png" alt="alt text">
+<br/>
+<img src="https://github.com/Kadirgvn92/IdentityMessage/blob/master/4.png" alt="alt text">
+<br/>
+<img src="https://github.com/Kadirgvn92/IdentityMessage/blob/master/5.png" alt="alt text">
+<br/>
+<img src="https://github.com/Kadirgvn92/IdentityMessage/blob/master/6.png" alt="alt text">
+<br/>
+<img src="https://github.com/Kadirgvn92/IdentityMessage/blob/master/7.png" alt="alt text">
+<br/>
+<img src="https://github.com/Kadirgvn92/IdentityMessage/blob/master/8.png" alt="alt text">
+<br/>
+<img src="https://github.com/Kadirgvn92/IdentityMessage/blob/master/9.png" alt="alt text">
+<br/>
+<img src="https://github.com/Kadirgvn92/IdentityMessage/blob/master/10.png" alt="alt text">
+<br/>
+<img src="https://github.com/Kadirgvn92/IdentityMessage/blob/master/11.png" alt="alt text">
+<br/>
+<img src="https://github.com/Kadirgvn92/IdentityMessage/blob/master/12.png" alt="alt text">
+<br/>
+<img src="https://github.com/Kadirgvn92/IdentityMessage/blob/master/13.png" alt="alt text">
+<br/>
+<img src="https://github.com/Kadirgvn92/IdentityMessage/blob/master/14.png" alt="alt text">
+<br/>
+
